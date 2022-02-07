@@ -30,19 +30,42 @@ namespace Waffle
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.pageRendererContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.btnSavePage = new System.Windows.Forms.ToolStripMenuItem();
+            this.pageRendererContextMenu.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // pageRendererContextMenu
+            // 
+            this.pageRendererContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnSavePage});
+            this.pageRendererContextMenu.Name = "pageRendererContextMenu";
+            this.pageRendererContextMenu.Size = new System.Drawing.Size(181, 48);
+            // 
+            // btnSavePage
+            // 
+            this.btnSavePage.Name = "btnSavePage";
+            this.btnSavePage.Size = new System.Drawing.Size(180, 22);
+            this.btnSavePage.Text = "Save";
+            this.btnSavePage.Click += new System.EventHandler(this.btnSavePage_Click);
             // 
             // PageRenderer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ContextMenuStrip = this.pageRendererContextMenu;
             this.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Name = "PageRenderer";
             this.Size = new System.Drawing.Size(686, 451);
+            this.pageRendererContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private ContextMenuStrip pageRendererContextMenu;
+        private ToolStripMenuItem btnSavePage;
     }
 }

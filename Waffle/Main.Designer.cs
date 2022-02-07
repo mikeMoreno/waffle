@@ -30,6 +30,7 @@ namespace Waffle
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.txtUrl = new System.Windows.Forms.TextBox();
             this.btnGo = new System.Windows.Forms.Button();

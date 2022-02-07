@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,12 @@ namespace Waffle
         private ToolTip UnknownEntity { get; }
 
         public WaffleLib WaffleLib { get; set; }
+
+        private string CurrentlyDisplayedText { get; set; }
+
+        private Image CurrentlyDisplayedPng { get; set; }
+
+        private ResponseType CurrentPageType { get; set; }
 
         public delegate void LinkClickedEventHandler(object sender, LinkClickedEventArgs e);
 
@@ -31,6 +38,8 @@ namespace Waffle
         public void Render(MenuResponse response)
         {
             Controls.Clear();
+
+            var text = new StringBuilder();
 
             var lines = response.Lines;
 
@@ -73,12 +82,20 @@ namespace Waffle
                 Controls.Add(label);
 
                 y += 20;
+
+                text.Append(line.Raw);
             }
+
+            CurrentlyDisplayedText = text.ToString();
+
+            CurrentPageType = ResponseType.Menu;
         }
 
         public void Render(TextResponse response)
         {
             Controls.Clear();
+
+            var text = new StringBuilder();
 
             var y = 10;
 
@@ -98,7 +115,13 @@ namespace Waffle
                 Controls.Add(label);
 
                 y += 20;
+
+                text.AppendLine(line);
             }
+
+            CurrentlyDisplayedText = text.ToString();
+
+            CurrentPageType = ResponseType.TextFile;
         }
 
         public void Render(PngResponse response)
@@ -113,25 +136,9 @@ namespace Waffle
 
             Controls.Add(pictureBox);
 
-            //var y = 10;
+            CurrentlyDisplayedPng = response.Image;
 
-            //foreach (var line in response.Text.Split("\r\n"))
-            //{
-            //    Label label;
-
-            //    if (IsLink(line))
-            //    {
-            //        label = BuildLinkLabel(x: 10, y, line);
-            //    }
-            //    else
-            //    {
-            //        label = BuildLabel(x: 10, y, line);
-            //    }
-
-            //    Controls.Add(label);
-
-            //    y += 20;
-            //}
+            CurrentPageType = ResponseType.PNG;
         }
 
         private bool IsLink(string line)
@@ -255,6 +262,59 @@ namespace Waffle
             UnknownEntity.SetToolTip(label, "I'm not yet sure how to render this type of item.");
 
             return label;
+        }
+
+        private void btnSavePage_Click(object sender, EventArgs e)
+        {
+            var saveFileDialog = new SaveFileDialog
+            {
+                OverwritePrompt = true,
+            };
+
+            if (CurrentPageType == ResponseType.TextFile)
+            {
+                saveFileDialog.DefaultExt = ".txt";
+                saveFileDialog.Filter = "Text Files (*.txt)|*.txt";
+            }
+            else if (CurrentPageType == ResponseType.Menu)
+            {
+                saveFileDialog.DefaultExt = ".waffle";
+                saveFileDialog.Filter = "Text Files (*.waffle)|*.waffle";
+            }
+            else if (CurrentPageType == ResponseType.PNG)
+            {
+                saveFileDialog.DefaultExt = ".png";
+                saveFileDialog.Filter = "PNG Files (*.png)|*.png";
+            }
+            else
+            {
+                saveFileDialog.DefaultExt = ".waffle";
+                saveFileDialog.Filter = "Waffle Files (*.waffle)|*.waffle";
+            }
+
+            var ans = saveFileDialog.ShowDialog();
+
+            if (ans != DialogResult.OK)
+            {
+                return;
+            }
+
+            if (CurrentPageType == ResponseType.TextFile)
+            {
+                File.WriteAllText(saveFileDialog.FileName, CurrentlyDisplayedText);
+            }
+            else if (CurrentPageType == ResponseType.Menu)
+            {
+                File.WriteAllText(saveFileDialog.FileName, CurrentlyDisplayedText);
+            }
+            else if (CurrentPageType == ResponseType.PNG)
+            {
+                CurrentlyDisplayedPng.Save(saveFileDialog.FileName, ImageFormat.Png);
+            }
+            else
+            {
+                File.WriteAllText(saveFileDialog.FileName, CurrentlyDisplayedText);
+            }
         }
     }
 }
