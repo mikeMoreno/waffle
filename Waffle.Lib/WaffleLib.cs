@@ -13,13 +13,13 @@ namespace Waffle.Lib
     {
         public async Task<Response> GetAsync<T>(string absoluteUrl) where T : Response
         {
-            var responseType = GetLinkType(absoluteUrl);
+            var responseType = GetContentType(absoluteUrl);
 
             return responseType switch
             {
-                ResponseType.Menu => await GetMenuAsync(absoluteUrl),
-                ResponseType.TextFile => await GetTextFileAsync(absoluteUrl),
-                ResponseType.PNG => await GetPngFileAsync(absoluteUrl),
+                ContentType.Menu => await GetMenuAsync(absoluteUrl),
+                ContentType.TextFile => await GetTextFileAsync(absoluteUrl),
+                ContentType.PNG => await GetPngFileAsync(absoluteUrl),
                 _ => throw new InvalidOperationException($"Unknown link type: {absoluteUrl}"),
             };
         }
@@ -88,7 +88,7 @@ namespace Waffle.Lib
             };
         }
 
-        public ResponseType GetLinkType(string absoluteUrl)
+        public ContentType GetContentType(string absoluteUrl)
         {
             ValidateUrl(absoluteUrl);
 
@@ -98,19 +98,19 @@ namespace Waffle.Lib
 
             if (urlPart.StartsWith('0'))
             {
-                return ResponseType.TextFile;
+                return ContentType.TextFile;
             }
             else if (urlPart.StartsWith('1'))
             {
-                return ResponseType.Menu;
+                return ContentType.Menu;
             }
             else if (urlPart.StartsWith('p'))
             {
-                return ResponseType.PNG;
+                return ContentType.PNG;
             }
             else
             {
-                return ResponseType.Unknown;
+                return ContentType.Unknown;
             }
         }
 

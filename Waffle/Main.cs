@@ -102,7 +102,7 @@ namespace Waffle
                 Text = e.CurrentlyDisplayedText,
             };
 
-            pageRenderer.Render(textResponse);
+            pageRenderer.ViewSource(textResponse);
 
         }
 
@@ -142,7 +142,11 @@ namespace Waffle
 
             if (lastVisitedUrl != "<home>")
             {
-                txtUrl.Text = pageRenderer.VisitedUrls.Pop();
+                txtUrl.Text = lastVisitedUrl;
+            }
+            else
+            {
+                txtUrl.Text = "";
             }
 
             if (!pageRenderer.VisitedUrls.Any())
@@ -167,14 +171,14 @@ namespace Waffle
 
             absoluteUrl = absoluteUrl.Trim();
 
-            var responseType = WaffleLib.GetLinkType(absoluteUrl);
+            var responseType = WaffleLib.GetContentType(absoluteUrl);
 
             switch (responseType)
             {
-                case ResponseType.Menu:
+                case ContentType.Menu:
                     pageRenderer.Render(await WaffleLib.GetMenuAsync(absoluteUrl));
                     break;
-                case ResponseType.TextFile:
+                case ContentType.TextFile:
                     pageRenderer.Render(await WaffleLib.GetTextFileAsync(absoluteUrl));
                     break;
                 default:

@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace Waffle.Lib
 {
-    public enum ResponseType
+    public enum ContentType
     {
         Menu,
         TextFile,
         PNG,
+        GopherSourceCode,
         Unknown
     }
 }

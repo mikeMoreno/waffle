@@ -22,7 +22,7 @@ namespace Waffle
 
         private Image CurrentlyDisplayedPng { get; set; }
 
-        private ResponseType CurrentPageType { get; set; }
+        private ContentType CurrentPageType { get; set; }
 
         public WaffleLib WaffleLib { get; set; }
 
@@ -122,7 +122,7 @@ namespace Waffle
 
             CurrentlyDisplayedText = text.ToString();
 
-            CurrentPageType = ResponseType.Menu;
+            CurrentPageType = ContentType.Menu;
 
             btnViewSource.Enabled = true;
         }
@@ -157,7 +157,7 @@ namespace Waffle
 
             CurrentlyDisplayedText = text.ToString();
 
-            CurrentPageType = ResponseType.TextFile;
+            CurrentPageType = ContentType.TextFile;
 
             btnViewSource.Enabled = false;
         }
@@ -176,9 +176,16 @@ namespace Waffle
 
             CurrentlyDisplayedPng = response.Image;
 
-            CurrentPageType = ResponseType.PNG;
+            CurrentPageType = ContentType.PNG;
 
             btnViewSource.Enabled = false;
+        }
+
+        public void ViewSource(TextResponse response)
+        {
+            Render(response);
+
+            CurrentPageType = ContentType.GopherSourceCode;
         }
 
         private bool IsLink(string line)
@@ -218,17 +225,17 @@ namespace Waffle
             {
                 LinkClicked?.Invoke(this, new LinkClickedEventArgs(line));
 
-                var responseType = WaffleLib.GetLinkType(line);
+                var contentType = WaffleLib.GetContentType(line);
 
-                switch (responseType)
+                switch (contentType)
                 {
-                    case ResponseType.Menu:
+                    case ContentType.Menu:
                         Render(await WaffleLib.GetMenuAsync(line));
                         break;
-                    case ResponseType.TextFile:
+                    case ContentType.TextFile:
                         Render(await WaffleLib.GetTextFileAsync(line));
                         break;
-                    case ResponseType.PNG:
+                    case ContentType.PNG:
                         Render(await WaffleLib.GetPngFileAsync(line));
                         break;
                     default:
@@ -311,20 +318,25 @@ namespace Waffle
                 OverwritePrompt = true,
             };
 
-            if (CurrentPageType == ResponseType.TextFile)
+            if (CurrentPageType == ContentType.TextFile)
             {
                 saveFileDialog.DefaultExt = ".txt";
                 saveFileDialog.Filter = "Text Files (*.txt)|*.txt";
             }
-            else if (CurrentPageType == ResponseType.Menu)
+            else if (CurrentPageType == ContentType.Menu)
             {
                 saveFileDialog.DefaultExt = ".waffle";
                 saveFileDialog.Filter = "Text Files (*.waffle)|*.waffle";
             }
-            else if (CurrentPageType == ResponseType.PNG)
+            else if (CurrentPageType == ContentType.PNG)
             {
                 saveFileDialog.DefaultExt = ".png";
                 saveFileDialog.Filter = "PNG Files (*.png)|*.png";
+            }
+            else if (CurrentPageType == ContentType.GopherSourceCode)
+            {
+                saveFileDialog.DefaultExt = ".waffle";
+                saveFileDialog.Filter = "Text Files (*.waffle)|*.waffle";
             }
             else
             {
@@ -339,15 +351,15 @@ namespace Waffle
                 return;
             }
 
-            if (CurrentPageType == ResponseType.TextFile)
+            if (CurrentPageType == ContentType.TextFile)
             {
                 File.WriteAllText(saveFileDialog.FileName, CurrentlyDisplayedText);
             }
-            else if (CurrentPageType == ResponseType.Menu)
+            else if (CurrentPageType == ContentType.Menu)
             {
                 File.WriteAllText(saveFileDialog.FileName, CurrentlyDisplayedText);
             }
-            else if (CurrentPageType == ResponseType.PNG)
+            else if (CurrentPageType == ContentType.PNG)
             {
                 CurrentlyDisplayedPng.Save(saveFileDialog.FileName, ImageFormat.Png);
             }
