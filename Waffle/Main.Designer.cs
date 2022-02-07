@@ -30,6 +30,7 @@ namespace Waffle
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.txtUrl = new System.Windows.Forms.TextBox();
             this.btnGo = new System.Windows.Forms.Button();
             this.pageRenderer = new Waffle.PageRenderer();
@@ -44,7 +45,6 @@ namespace Waffle
             this.txtUrl.Name = "txtUrl";
             this.txtUrl.Size = new System.Drawing.Size(611, 23);
             this.txtUrl.TabIndex = 1;
-            this.txtUrl.Text = "gopher://gopher.floodgap.com";
             // 
             // btnGo
             // 
@@ -91,7 +91,9 @@ namespace Waffle
             this.Controls.Add(this.pageRenderer);
             this.Controls.Add(this.btnGo);
             this.Controls.Add(this.txtUrl);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Main";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Waffle";
             this.ResumeLayout(false);
             this.PerformLayout();
