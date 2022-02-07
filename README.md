@@ -1,8 +1,8 @@
 <p align="center">
-  ![Waffle](media/waffle.png)
+  <img width="300" src="https://github.com/mikeMoreno/waffle/blob/master/media/waffle.png">
 </p>
 
 
 # Waffle
 
-Waffle is a 
+Waffle...
