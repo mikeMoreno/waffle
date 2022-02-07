@@ -16,23 +16,55 @@ namespace Waffle
     {
         private ToolTip UnknownEntity { get; }
 
-        public WaffleLib WaffleLib { get; set; }
-
         private string CurrentlyDisplayedText { get; set; }
+
+        private List<SelectorLine> CurrentlyViewedSelectorLines { get; set; }
 
         private Image CurrentlyDisplayedPng { get; set; }
 
         private ResponseType CurrentPageType { get; set; }
 
+        public WaffleLib WaffleLib { get; set; }
+
+        public Stack<string> VisitedUrls { get; } = new Stack<string>();
+
+        public string StandbyText { get; set; }
+
         public delegate void LinkClickedEventHandler(object sender, LinkClickedEventArgs e);
 
         public event LinkClickedEventHandler LinkClicked;
 
-        public PageRenderer()
+        public delegate void ViewSourceEventHandler(object sender, ViewSourceEventArgs e);
+
+        public event ViewSourceEventHandler ViewingSource;
+
+        private PageRenderer()
         {
             InitializeComponent();
 
             UnknownEntity = new ToolTip();
+        }
+
+        public void Clear()
+        {
+            Controls.Clear();
+        }
+
+        public void RenderSelectorLines(SelectorLine[] selectorLines)
+        {
+            Controls.Clear();
+
+            var y = 10;
+
+            foreach (var line in selectorLines)
+            {
+                Label label = BuildLabel(x: 10, y, line);
+                label.Text = line.Raw;
+
+                Controls.Add(label);
+
+                y += 20;
+            }
         }
 
         public void Render(MenuResponse response)
@@ -40,6 +72,8 @@ namespace Waffle
             Controls.Clear();
 
             var text = new StringBuilder();
+
+            var currentlyViewedSelectorLines = new List<SelectorLine>();
 
             var lines = response.Lines;
 
@@ -89,6 +123,8 @@ namespace Waffle
             CurrentlyDisplayedText = text.ToString();
 
             CurrentPageType = ResponseType.Menu;
+
+            btnViewSource.Enabled = true;
         }
 
         public void Render(TextResponse response)
@@ -122,6 +158,8 @@ namespace Waffle
             CurrentlyDisplayedText = text.ToString();
 
             CurrentPageType = ResponseType.TextFile;
+
+            btnViewSource.Enabled = false;
         }
 
         public void Render(PngResponse response)
@@ -139,6 +177,8 @@ namespace Waffle
             CurrentlyDisplayedPng = response.Image;
 
             CurrentPageType = ResponseType.PNG;
+
+            btnViewSource.Enabled = false;
         }
 
         private bool IsLink(string line)
@@ -315,6 +355,23 @@ namespace Waffle
             {
                 File.WriteAllText(saveFileDialog.FileName, CurrentlyDisplayedText);
             }
+        }
+
+        private void btnViewSource_Click(object sender, EventArgs e)
+        {
+            ViewingSource?.Invoke(this, new ViewSourceEventArgs(CurrentlyDisplayedText));
+        }
+
+        public static PageRenderer Instance(WaffleLib waffleLib)
+        {
+            var pageRenderer = new PageRenderer
+            {
+                WaffleLib = waffleLib,
+                AutoScroll = true,
+                Dock = DockStyle.Fill
+            };
+
+            return pageRenderer;
         }
     }
 }

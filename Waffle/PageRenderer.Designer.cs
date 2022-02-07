@@ -33,15 +33,17 @@ namespace Waffle
             this.components = new System.ComponentModel.Container();
             this.pageRendererContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.btnSavePage = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnViewSource = new System.Windows.Forms.ToolStripMenuItem();
             this.pageRendererContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // pageRendererContextMenu
             // 
             this.pageRendererContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnSavePage});
+            this.btnSavePage,
+            this.btnViewSource});
             this.pageRendererContextMenu.Name = "pageRendererContextMenu";
-            this.pageRendererContextMenu.Size = new System.Drawing.Size(181, 48);
+            this.pageRendererContextMenu.Size = new System.Drawing.Size(181, 70);
             // 
             // btnSavePage
             // 
@@ -49,6 +51,14 @@ namespace Waffle
             this.btnSavePage.Size = new System.Drawing.Size(180, 22);
             this.btnSavePage.Text = "Save";
             this.btnSavePage.Click += new System.EventHandler(this.btnSavePage_Click);
+            // 
+            // btnViewSource
+            // 
+            this.btnViewSource.Enabled = false;
+            this.btnViewSource.Name = "btnViewSource";
+            this.btnViewSource.Size = new System.Drawing.Size(180, 22);
+            this.btnViewSource.Text = "View Source";
+            this.btnViewSource.Click += new System.EventHandler(this.btnViewSource_Click);
             // 
             // PageRenderer
             // 
@@ -67,5 +77,6 @@ namespace Waffle
 
         private ContextMenuStrip pageRendererContextMenu;
         private ToolStripMenuItem btnSavePage;
+        private ToolStripMenuItem btnViewSource;
     }
 }
