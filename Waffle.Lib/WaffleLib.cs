@@ -13,13 +13,13 @@ namespace Waffle.Lib
     {
         public async Task<Response> GetAsync<T>(string absoluteUrl) where T : Response
         {
-            var responseType = GetContentType(absoluteUrl);
+            var responseType = GetItemType(absoluteUrl);
 
             return responseType switch
             {
-                ContentType.Menu => await GetMenuAsync(absoluteUrl),
-                ContentType.TextFile => await GetTextFileAsync(absoluteUrl),
-                ContentType.PNG => await GetPngFileAsync(absoluteUrl),
+                ItemType.Menu => await GetMenuAsync(absoluteUrl),
+                ItemType.TextFile => await GetTextFileAsync(absoluteUrl),
+                ItemType.PNG => await GetPngFileAsync(absoluteUrl),
                 _ => throw new InvalidOperationException($"Unknown link type: {absoluteUrl}"),
             };
         }
@@ -88,30 +88,70 @@ namespace Waffle.Lib
             };
         }
 
-        public ContentType GetContentType(string absoluteUrl)
+        public ItemType GetItemType(string absoluteUrl)
         {
             ValidateUrl(absoluteUrl);
 
             var parsedUrl = ParseUrl(absoluteUrl);
 
-            var (_, urlPart) = GopherStreamReader.ParseHostAndUrl(parsedUrl);
+            var itemType = ParseItemType(parsedUrl);
 
-            if (urlPart.StartsWith('0'))
+            if (itemType == "0")
             {
-                return ContentType.TextFile;
+                return ItemType.TextFile;
             }
-            else if (urlPart.StartsWith('1'))
+            else if (itemType == "1")
             {
-                return ContentType.Menu;
+                return ItemType.Menu;
             }
-            else if (urlPart.StartsWith('p'))
+            else if (itemType == "p")
             {
-                return ContentType.PNG;
+                return ItemType.PNG;
+            }
+            else if (itemType == "I")
+            {
+                return ItemType.Image;
+            }
+            else if (itemType == "9")
+            {
+                return ItemType.BinaryFile;
             }
             else
             {
-                return ContentType.Unknown;
+                return ItemType.Unknown;
             }
+        }
+
+        private static string ParseItemType(string absoluteUrl)
+        {
+            string path = null;
+
+            if (absoluteUrl.Contains('/'))
+            {
+                path = absoluteUrl[(absoluteUrl.IndexOf('/') + 1)..];
+            }
+
+            if (path == null)
+            {
+                return null;
+            }
+
+            if (path.Length <= 1)
+            {
+                return path;
+            }
+
+            if (!path.Contains('/'))
+            {
+                return path;
+            }
+
+            if (path[..path.IndexOf('/')].Length == 1)
+            {
+                path = path[..path.IndexOf('/')];
+            }
+
+            return path;
         }
 
         private static void ValidateUrl(string url)

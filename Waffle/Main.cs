@@ -96,6 +96,8 @@ namespace Waffle
             txtUrl.Text = e.Link;
 
             btnBack.Enabled = true;
+
+            Text = $"Waffle - {e.ItemType}";
         }
 
         private void PageRenderer_ViewingSource(object sender, ViewSourceEventArgs e)
@@ -183,17 +185,20 @@ namespace Waffle
 
             absoluteUrl = absoluteUrl.Trim();
 
-            var responseType = WaffleLib.GetContentType(absoluteUrl);
+            var responseType = WaffleLib.GetItemType(absoluteUrl);
 
             switch (responseType)
             {
-                case ContentType.Menu:
+                case ItemType.Menu:
+                    Text = "Waffle - Menu";
                     pageRenderer.Render(await WaffleLib.GetMenuAsync(absoluteUrl));
                     break;
-                case ContentType.TextFile:
+                case ItemType.TextFile:
+                    Text = "Waffle - Text";
                     pageRenderer.Render(await WaffleLib.GetTextFileAsync(absoluteUrl));
                     break;
                 default:
+                    Text = "Waffle - Unknown";
                     pageRenderer.Render(await WaffleLib.GetMenuAsync(absoluteUrl));
                     break;
             }

@@ -22,7 +22,7 @@ namespace Waffle
 
         private Image CurrentlyDisplayedPng { get; set; }
 
-        private ContentType CurrentPageType { get; set; }
+        private ItemType CurrentPageType { get; set; }
 
         public WaffleLib WaffleLib { get; set; }
 
@@ -96,7 +96,7 @@ namespace Waffle
                 {
                     label = BuildLinkLabel(x: 10, y, line);
                 }
-                else if (line.ItemType == ItemType.Submenu)
+                else if (line.ItemType == ItemType.Menu)
                 {
                     label = BuildLinkLabel(x: 10, y, line);
                 }
@@ -122,7 +122,7 @@ namespace Waffle
 
             CurrentlyDisplayedText = text.ToString();
 
-            CurrentPageType = ContentType.Menu;
+            CurrentPageType = ItemType.Menu;
 
             btnViewSource.Enabled = true;
         }
@@ -157,7 +157,7 @@ namespace Waffle
 
             CurrentlyDisplayedText = text.ToString();
 
-            CurrentPageType = ContentType.TextFile;
+            CurrentPageType = ItemType.TextFile;
 
             btnViewSource.Enabled = false;
         }
@@ -176,7 +176,7 @@ namespace Waffle
 
             CurrentlyDisplayedPng = response.Image;
 
-            CurrentPageType = ContentType.PNG;
+            CurrentPageType = ItemType.PNG;
 
             btnViewSource.Enabled = false;
         }
@@ -185,7 +185,7 @@ namespace Waffle
         {
             Render(response);
 
-            CurrentPageType = ContentType.GopherSourceCode;
+            CurrentPageType = ItemType.GopherSourceCode;
         }
 
         private bool IsLink(string line)
@@ -223,19 +223,19 @@ namespace Waffle
 
             label.Click += async (object sender, EventArgs e) =>
             {
-                LinkClicked?.Invoke(this, new LinkClickedEventArgs(line));
+                var itemType = WaffleLib.GetItemType(line);
 
-                var contentType = WaffleLib.GetContentType(line);
+                LinkClicked?.Invoke(this, new LinkClickedEventArgs(line, itemType));
 
-                switch (contentType)
+                switch (itemType)
                 {
-                    case ContentType.Menu:
+                    case ItemType.Menu:
                         Render(await WaffleLib.GetMenuAsync(line));
                         break;
-                    case ContentType.TextFile:
+                    case ItemType.TextFile:
                         Render(await WaffleLib.GetTextFileAsync(line));
                         break;
-                    case ContentType.PNG:
+                    case ItemType.PNG:
                         Render(await WaffleLib.GetPngFileAsync(line));
                         break;
                     default:
@@ -275,15 +275,15 @@ namespace Waffle
 
                 if (selectorLine.ItemType == ItemType.TextFile)
                 {
-                    LinkClicked?.Invoke(this, new LinkClickedEventArgs(selectorLine.GetLink()));
+                    LinkClicked?.Invoke(this, new LinkClickedEventArgs(selectorLine.GetLink(), selectorLine.ItemType));
 
                     var response = await WaffleLib.GetTextFileAsync(selectorLine.GetLink());
 
                     Render(response);
                 }
-                else if (selectorLine.ItemType == ItemType.Submenu)
+                else if (selectorLine.ItemType == ItemType.Menu)
                 {
-                    LinkClicked?.Invoke(this, new LinkClickedEventArgs(selectorLine.GetLink()));
+                    LinkClicked?.Invoke(this, new LinkClickedEventArgs(selectorLine.GetLink(), selectorLine.ItemType));
 
                     var response = await WaffleLib.GetMenuAsync(selectorLine.GetLink());
 
@@ -291,7 +291,7 @@ namespace Waffle
                 }
                 else if (selectorLine.ItemType == ItemType.PNG)
                 {
-                    LinkClicked?.Invoke(this, new LinkClickedEventArgs(selectorLine.GetLink()));
+                    LinkClicked?.Invoke(this, new LinkClickedEventArgs(selectorLine.GetLink(), selectorLine.ItemType));
 
                     var response = await WaffleLib.GetPngFileAsync(selectorLine.GetLink());
 
@@ -318,22 +318,22 @@ namespace Waffle
                 OverwritePrompt = true,
             };
 
-            if (CurrentPageType == ContentType.TextFile)
+            if (CurrentPageType == ItemType.TextFile)
             {
                 saveFileDialog.DefaultExt = ".txt";
                 saveFileDialog.Filter = "Text Files (*.txt)|*.txt";
             }
-            else if (CurrentPageType == ContentType.Menu)
+            else if (CurrentPageType == ItemType.Menu)
             {
                 saveFileDialog.DefaultExt = ".waffle";
                 saveFileDialog.Filter = "Text Files (*.waffle)|*.waffle";
             }
-            else if (CurrentPageType == ContentType.PNG)
+            else if (CurrentPageType == ItemType.PNG)
             {
                 saveFileDialog.DefaultExt = ".png";
                 saveFileDialog.Filter = "PNG Files (*.png)|*.png";
             }
-            else if (CurrentPageType == ContentType.GopherSourceCode)
+            else if (CurrentPageType == ItemType.GopherSourceCode)
             {
                 saveFileDialog.DefaultExt = ".waffle";
                 saveFileDialog.Filter = "Text Files (*.waffle)|*.waffle";
@@ -351,15 +351,15 @@ namespace Waffle
                 return;
             }
 
-            if (CurrentPageType == ContentType.TextFile)
+            if (CurrentPageType == ItemType.TextFile)
             {
                 File.WriteAllText(saveFileDialog.FileName, CurrentlyDisplayedText);
             }
-            else if (CurrentPageType == ContentType.Menu)
+            else if (CurrentPageType == ItemType.Menu)
             {
                 File.WriteAllText(saveFileDialog.FileName, CurrentlyDisplayedText);
             }
-            else if (CurrentPageType == ContentType.PNG)
+            else if (CurrentPageType == ItemType.PNG)
             {
                 CurrentlyDisplayedPng.Save(saveFileDialog.FileName, ImageFormat.Png);
             }

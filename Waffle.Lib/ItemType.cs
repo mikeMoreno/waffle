@@ -4,7 +4,7 @@ namespace Waffle.Lib
     public enum ItemType
     {
         TextFile,
-        Submenu,
+        Menu,
         Nameserver,
         Error,
         BinHex,
@@ -22,6 +22,7 @@ namespace Waffle.Lib
         Info,
         SoundFile,
         PNG,
+        GopherSourceCode,
         Unknown,
     }
 }

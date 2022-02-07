@@ -22,45 +22,91 @@ namespace Waffle.Lib
 
             opened = true;
 
-            var (host, urlPart) = ParseHostAndUrl(absoluteUrl);
+            var host = ParseHost(absoluteUrl);
+            var port = ParsePort(absoluteUrl);
+            var path = ParsePath(absoluteUrl);
 
-            urlPart = StripLeadingItemType(urlPart);
-
-            var data = Encoding.ASCII.GetBytes($"{urlPart}\r\n");
+            var data = Encoding.ASCII.GetBytes($"{path}\r\n");
 
             socc = new Socket(SocketType.Stream, ProtocolType.Tcp);
 
-            await socc.ConnectAsync(host, 70);
+            await socc.ConnectAsync(host, port.GetValueOrDefault(70));
 
             await socc.SendAsync(data, SocketFlags.None);
         }
 
-        private string StripLeadingItemType(string urlPart)
+        private static string ParseHost(string absoluteUrl)
         {
-            if (!urlPart.Contains('/'))
+            var host = absoluteUrl;
+
+            if (host.Contains('/'))
             {
-                return urlPart;
+                host = host[..host.IndexOf('/')];
             }
 
-            if (urlPart[..urlPart.IndexOf('/')].Length == 1)
+            if (host.Contains(':'))
             {
-                return urlPart[(urlPart.IndexOf('/') + 1)..];
+                host = host[..host.IndexOf(':')];
             }
 
-            return urlPart;
+            return host;
         }
 
-        public static (string Host, string Url) ParseHostAndUrl(string absoluteUrl)
+        private static int? ParsePort(string absoluteUrl)
         {
-            if (!absoluteUrl.Contains('/'))
+            int? port = null;
+
+            var host = absoluteUrl;
+
+            if (host.Contains('/'))
             {
-                return (Host: absoluteUrl, Url: "");
+                host = host[..host.IndexOf('/')];
             }
 
-            var host = absoluteUrl[..absoluteUrl.IndexOf('/')];
-            var urlPart = absoluteUrl[(absoluteUrl.IndexOf('/') + 1)..];
+            if (host.Contains(':'))
+            {
+                var parts = host.Split(':');
 
-            return (host, urlPart);
+                if (int.TryParse(parts[1], out int parsedPort))
+                {
+                    port = parsedPort;
+                }
+                else
+                {
+                    throw new ArgumentException($"Bad port value: {absoluteUrl}");
+                }
+
+                return port;
+            }
+
+            return null;
+        }
+
+        private static string ParsePath(string absoluteUrl)
+        {
+            string path = null;
+
+            if (absoluteUrl.Contains('/'))
+            {
+                path = absoluteUrl[(absoluteUrl.IndexOf('/') + 1)..];
+            }
+
+            if(path == null)
+            {
+                return null;
+            }
+
+            if(!path.Contains('/'))
+            {
+                return path;
+            }
+
+            if (path[..path.IndexOf('/')].Length == 1)
+            {
+                path = path[(path.IndexOf('/') + 1)..];
+            }
+
+            return path;
         }
 
         public bool HasMoreLines
