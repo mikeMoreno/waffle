@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Waffle.Lib
 {
-    public abstract class Response
+    public enum ResponseType
     {
-        //public ResponseType ResponseType { get; set; }
+        Menu,
+        TextFile,
+        Unknown
     }
 }

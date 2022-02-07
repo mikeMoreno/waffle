@@ -13,11 +13,6 @@ namespace Waffle.Lib
         private Socket socc;
         private bool opened = false;
 
-        public GopherStreamReader()
-        {
-
-        }
-
         public async Task OpenAsync(string absoluteUrl)
         {
             if (opened)
@@ -27,8 +22,9 @@ namespace Waffle.Lib
 
             opened = true;
 
-            // "gopher.floodgap.com/0/gopher/proxy"
             var (host, urlPart) = ParseHostAndUrl(absoluteUrl);
+
+            urlPart = StripLeadingItemType(urlPart);
 
             var data = Encoding.ASCII.GetBytes($"{urlPart}\r\n");
 
@@ -39,7 +35,22 @@ namespace Waffle.Lib
             await socc.SendAsync(data, SocketFlags.None);
         }
 
-        private (string Host, string Url) ParseHostAndUrl(string absoluteUrl)
+        private string StripLeadingItemType(string urlPart)
+        {
+            if (!urlPart.Contains('/'))
+            {
+                return urlPart;
+            }
+
+            if(urlPart[..urlPart.IndexOf('/')].Length == 1)
+            {
+                return urlPart[(urlPart.IndexOf('/') + 1)..];
+            }
+
+            return urlPart;
+        }
+
+        public static (string Host, string Url) ParseHostAndUrl(string absoluteUrl)
         {
             if (!absoluteUrl.Contains('/'))
             {

@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Waffle.Lib
 {
-    public abstract class Response
+    public class TextResponse : Response
     {
-        //public ResponseType ResponseType { get; set; }
+        public string Text { get; set; }
+
     }
 }

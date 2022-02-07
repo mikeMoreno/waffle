@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Waffle.Lib
 {
-    public abstract class Response
+    public class MenuResponse : Response
     {
-        //public ResponseType ResponseType { get; set; }
+        public SelectorLine[] Lines { get; set; }
+
     }
 }

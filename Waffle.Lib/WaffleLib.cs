@@ -10,11 +10,31 @@ namespace Waffle.Lib
 {
     public class WaffleLib
     {
-        public async Task<Response> SendRequestAsync(string url)
+        public async Task<Response> GetAsync<T>(string absoluteUrl) where T : Response
         {
-            ValidateUrl(url);
+            //ValidateUrl(absoluteUrl);
 
-            var parsedUrl = ParseUrl(url);
+            //var parsedUrl = ParseUrl(absoluteUrl);
+
+            //var (_, urlPart) = GopherStreamReader.ParseHostAndUrl(parsedUrl);
+
+
+
+            var responseType = GetLinkType(absoluteUrl);
+
+            return responseType switch
+            {
+                ResponseType.Menu => await GetMenuAsync(absoluteUrl),
+                ResponseType.TextFile => await GetTextFileAsync(absoluteUrl),
+                _ => throw new InvalidOperationException($"Unknown link type: {absoluteUrl}"),
+            };
+        }
+
+        public async Task<MenuResponse> GetMenuAsync(string absoluteUrl)
+        {
+            ValidateUrl(absoluteUrl);
+
+            var parsedUrl = ParseUrl(absoluteUrl);
 
             using var reader = new GopherStreamReader();
 
@@ -22,17 +42,17 @@ namespace Waffle.Lib
 
             var lines = await reader.ReadAllLinesAsync();
 
-            return new Response()
+            return new MenuResponse()
             {
                 Lines = lines.Select(line => new SelectorLine(line)).ToArray(),
             };
         }
 
-        public async Task<string> GetTextFileAsync(string url)
+        public async Task<TextResponse> GetTextFileAsync(string absoluteUrl)
         {
-            ValidateUrl(url);
+            ValidateUrl(absoluteUrl);
 
-            var parsedUrl = ParseUrl(url);
+            var parsedUrl = ParseUrl(absoluteUrl);
 
             using var reader = new GopherStreamReader();
 
@@ -50,7 +70,32 @@ namespace Waffle.Lib
                 }
             }
 
-            return fileContents.ToString();
+            return new TextResponse()
+            {
+                Text = fileContents.ToString(),
+            };
+        }
+
+        public ResponseType GetLinkType(string absoluteUrl)
+        {
+            ValidateUrl(absoluteUrl);
+
+            var parsedUrl = ParseUrl(absoluteUrl);
+
+            var (_, urlPart) = GopherStreamReader.ParseHostAndUrl(parsedUrl);
+
+            if (urlPart.StartsWith('0'))
+            {
+                return ResponseType.TextFile;
+            }
+            else if (urlPart.StartsWith('1'))
+            {
+                return ResponseType.Menu;
+            }
+            else
+            {
+                return ResponseType.Unknown;
+            }
         }
 
         private static void ValidateUrl(string url)
