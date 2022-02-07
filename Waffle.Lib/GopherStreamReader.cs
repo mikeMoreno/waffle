@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Waffle
+namespace Waffle.Lib
 {
     class GopherStreamReader : IDisposable
     {
@@ -108,7 +108,7 @@ namespace Waffle
 
                 if (bytesRead == 0)
                 {
-                    Trace.Assert(false, "No bytes to read!!!!!");
+                    break;
                 }
 
                 var currentByte = responseBuffer[0];
