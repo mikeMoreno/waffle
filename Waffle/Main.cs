@@ -21,6 +21,13 @@ namespace Waffle
             defaultTab.Controls.Add(pageRenderer);
 
             tabSitePages.SelectedIndexChanged += TabSitePages_SelectedIndexChanged;
+
+            if (Program.CliArgs.Length > 0)
+            {
+                var siteToVisit = Program.CliArgs.First();
+
+                _ = VisitSiteAsync(siteToVisit);
+            }
         }
 
         private void TabSitePages_SelectedIndexChanged(object sender, EventArgs e)
@@ -108,12 +115,17 @@ namespace Waffle
 
         private async void btnGo_Click(object sender, EventArgs e)
         {
-            var url = txtUrl.Text;
+            await VisitSiteAsync(txtUrl.Text);
+        }
 
-            if (string.IsNullOrWhiteSpace(url))
+        private async Task VisitSiteAsync(string absoluteUrl)
+        {
+            if (string.IsNullOrWhiteSpace(absoluteUrl))
             {
                 return;
             }
+
+            txtUrl.Text = absoluteUrl;
 
             var selectedTab = tabSitePages.SelectedTab;
 
@@ -130,7 +142,7 @@ namespace Waffle
 
             btnBack.Enabled = true;
 
-            await RenderUrlAsync(url);
+            await RenderUrlAsync(absoluteUrl);
         }
 
         private async void btnBack_Click(object sender, EventArgs e)
