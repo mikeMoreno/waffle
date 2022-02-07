@@ -17,6 +17,10 @@ namespace Waffle
 
         public WaffleLib WaffleLib { get; set; }
 
+        public delegate void LinkClickedEventHandler(object sender, LinkClickedEventArgs e);
+
+        public event LinkClickedEventHandler LinkClicked;
+
         public PageRenderer()
         {
             InitializeComponent();
@@ -41,15 +45,15 @@ namespace Waffle
 
                 Label label;
 
-                if (line.ItemType == "i")
+                if (line.ItemType == ItemType.Info)
                 {
                     label = BuildLabel(x: 10, y, line);
                 }
-                else if (line.ItemType == "0")
+                else if (line.ItemType == ItemType.TextFile)
                 {
                     label = BuildLinkLabel(x: 10, y, line);
                 }
-                else if (line.ItemType == "1")
+                else if (line.ItemType == ItemType.Submenu)
                 {
                     label = BuildLinkLabel(x: 10, y, line);
                 }
@@ -82,23 +86,6 @@ namespace Waffle
                 {
                     label = BuildLabel(x: 10, y, line);
                 }
-
-                //if (line.ItemType == "i")
-                //{
-                //    label = BuildLabel(x: 10, y, line);
-                //}
-                //else if (line.ItemType == "0")
-                //{
-                //    label = BuildLinkLabel(x: 10, y, line);
-                //}
-                //else if (line.ItemType == "1")
-                //{
-                //    label = BuildLinkLabel(x: 10, y, line);
-                //}
-                //else
-                //{
-                //    label = BuildUnknownTypeLabel(x: 10, y, line);
-                //}
 
                 Controls.Add(label);
 
@@ -141,6 +128,8 @@ namespace Waffle
 
             label.Click += async (object sender, EventArgs e) =>
             {
+                LinkClicked?.Invoke(this, new LinkClickedEventArgs(line));
+
                 var responseType = WaffleLib.GetLinkType(line);
 
                 switch (responseType)
@@ -186,14 +175,18 @@ namespace Waffle
             {
                 var selectorLine = (sender as Label).Tag as SelectorLine;
 
-                if (selectorLine.ItemType == "0")
+                if (selectorLine.ItemType == ItemType.TextFile)
                 {
+                    LinkClicked?.Invoke(this, new LinkClickedEventArgs(selectorLine.GetLink()));
+
                     var response = await WaffleLib.GetTextFileAsync(selectorLine.GetLink());
 
                     Render(response);
                 }
-                else if (selectorLine.ItemType == "1")
+                else if (selectorLine.ItemType == ItemType.Submenu)
                 {
+                    LinkClicked?.Invoke(this, new LinkClickedEventArgs(selectorLine.GetLink()));
+
                     var response = await WaffleLib.GetMenuAsync(selectorLine.GetLink());
 
                     Render(response);

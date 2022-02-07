@@ -13,11 +13,13 @@ namespace Waffle
             WaffleLib = waffleLib;
 
             pageRenderer.WaffleLib = WaffleLib;
+
+            pageRenderer.LinkClicked += PageRenderer_LinkClicked;
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void PageRenderer_LinkClicked(object sender, LinkClickedEventArgs e)
         {
-
+            txtUrl.Text = e.Link;
         }
 
         private async void btnGo_Click(object sender, EventArgs e)

@@ -12,7 +12,7 @@ namespace Waffle.Lib
 
         public string DisplayString { get; private set; }
 
-        public string ItemType { get; private set; }
+        public ItemType ItemType { get; private set; }
 
         public string Selector { get; private set; }
 
@@ -38,22 +38,51 @@ namespace Waffle.Lib
 
             if (parts.Length == 4)
             {
-                ItemType = parts[0][0].ToString();
+                ItemType = MapItemType(parts[0][0].ToString());
                 DisplayString = parts[0][1..];
-                Selector = parts[1];
-                HostName = parts[2];
+                Selector = parts[1].Trim();
+                HostName = parts[2].Trim();
                 Port = int.Parse(parts[3]);
             }
         }
 
         public string GetLink()
         {
-            if (ItemType != "0" && ItemType != "1" && ItemType != "7")
+            if (ItemType != ItemType.TextFile &&
+                ItemType != ItemType.Submenu &&
+                ItemType != ItemType.Search
+            )
             {
                 return null;
             }
 
             return $"gopher://{HostName}{Selector}";
+        }
+
+        private static ItemType MapItemType(string itemTypePrefix)
+        {
+            return itemTypePrefix switch
+            {
+                "0" => ItemType.TextFile,
+                "1" => ItemType.Submenu,
+                "2" => ItemType.Nameserver,
+                "3" => ItemType.Error,
+                "4" => ItemType.BinHex,
+                "5" => ItemType.DOS,
+                "6" => ItemType.UuencodedFile,
+                "7" => ItemType.Search,
+                "8" => ItemType.Telnet,
+                "9" => ItemType.BinaryFile,
+                "+" => ItemType.Mirror,
+                "g" => ItemType.GIF,
+                "I" => ItemType.Image,
+                "T" => ItemType.Telnet3270,
+                "d" => ItemType.Doc,
+                "h" => ItemType.HTML,
+                "i" => ItemType.Info,
+                "s" => ItemType.SoundFile,
+                _ => ItemType.Unknown
+            };
         }
 
         private static string StripNewline(string line)
