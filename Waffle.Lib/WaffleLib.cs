@@ -12,14 +12,6 @@ namespace Waffle.Lib
     {
         public async Task<Response> GetAsync<T>(string absoluteUrl) where T : Response
         {
-            //ValidateUrl(absoluteUrl);
-
-            //var parsedUrl = ParseUrl(absoluteUrl);
-
-            //var (_, urlPart) = GopherStreamReader.ParseHostAndUrl(parsedUrl);
-
-
-
             var responseType = GetLinkType(absoluteUrl);
 
             return responseType switch

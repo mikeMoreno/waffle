@@ -6,6 +6,8 @@ namespace Waffle
     {
         private WaffleLib WaffleLib { get; }
 
+        private Stack<string> visitedUrls = new Stack<string>();
+
         public Main(WaffleLib waffleLib)
         {
             InitializeComponent();
@@ -19,30 +21,53 @@ namespace Waffle
 
         private void PageRenderer_LinkClicked(object sender, LinkClickedEventArgs e)
         {
+            visitedUrls.Push(txtUrl.Text.Trim());
+
             txtUrl.Text = e.Link;
+
+            btnBack.Enabled = true;
         }
 
         private async void btnGo_Click(object sender, EventArgs e)
         {
-            var url = txtUrl.Text.Trim();
+            var url = txtUrl.Text;
 
             if (string.IsNullOrWhiteSpace(url))
             {
                 return;
             }
 
-            var responseType = WaffleLib.GetLinkType(url);
+            await RenderUrlAsync(url);
+        }
+
+        private async void btnBack_Click(object sender, EventArgs e)
+        {
+            txtUrl.Text = visitedUrls.Pop();
+
+            if (!visitedUrls.Any())
+            {
+                btnBack.Enabled = false;
+            }
+
+            await RenderUrlAsync(txtUrl.Text);
+        }
+
+        private async Task RenderUrlAsync(string absoluteUrl)
+        {
+            absoluteUrl = absoluteUrl.Trim();
+
+            var responseType = WaffleLib.GetLinkType(absoluteUrl);
 
             switch (responseType)
             {
                 case ResponseType.Menu:
-                    pageRenderer.Render(await WaffleLib.GetMenuAsync(url));
+                    pageRenderer.Render(await WaffleLib.GetMenuAsync(absoluteUrl));
                     break;
                 case ResponseType.TextFile:
-                    pageRenderer.Render(await WaffleLib.GetTextFileAsync(url));
+                    pageRenderer.Render(await WaffleLib.GetTextFileAsync(absoluteUrl));
                     break;
                 default:
-                    pageRenderer.Render(await WaffleLib.GetMenuAsync(url));
+                    pageRenderer.Render(await WaffleLib.GetMenuAsync(absoluteUrl));
                     break;
             }
         }

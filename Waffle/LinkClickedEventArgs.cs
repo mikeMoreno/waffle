@@ -12,7 +12,7 @@ namespace Waffle
 
         public LinkClickedEventArgs(string link)
         {
-            Link = link.Trim();
+            Link = link?.Trim();
         }
     }
 }

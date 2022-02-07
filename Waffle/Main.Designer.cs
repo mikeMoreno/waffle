@@ -33,13 +33,14 @@ namespace Waffle
             this.txtUrl = new System.Windows.Forms.TextBox();
             this.btnGo = new System.Windows.Forms.Button();
             this.pageRenderer = new Waffle.PageRenderer();
+            this.btnBack = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // txtUrl
             // 
             this.txtUrl.Location = new System.Drawing.Point(12, 414);
             this.txtUrl.Name = "txtUrl";
-            this.txtUrl.Size = new System.Drawing.Size(685, 23);
+            this.txtUrl.Size = new System.Drawing.Size(611, 23);
             this.txtUrl.TabIndex = 1;
             this.txtUrl.Text = "gopher://gopher.floodgap.com";
             // 
@@ -56,16 +57,30 @@ namespace Waffle
             // pageRenderer
             // 
             this.pageRenderer.AutoScroll = true;
+            this.pageRenderer.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.pageRenderer.Location = new System.Drawing.Point(12, 12);
             this.pageRenderer.Name = "pageRenderer";
             this.pageRenderer.Size = new System.Drawing.Size(776, 395);
             this.pageRenderer.TabIndex = 3;
+            this.pageRenderer.WaffleLib = null;
+            // 
+            // btnBack
+            // 
+            this.btnBack.Enabled = false;
+            this.btnBack.Location = new System.Drawing.Point(629, 413);
+            this.btnBack.Name = "btnBack";
+            this.btnBack.Size = new System.Drawing.Size(75, 23);
+            this.btnBack.TabIndex = 4;
+            this.btnBack.Text = "<---";
+            this.btnBack.UseVisualStyleBackColor = true;
+            this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnBack);
             this.Controls.Add(this.pageRenderer);
             this.Controls.Add(this.btnGo);
             this.Controls.Add(this.txtUrl);
@@ -80,5 +95,6 @@ namespace Waffle
         private TextBox txtUrl;
         private Button btnGo;
         private PageRenderer pageRenderer;
+        private Button btnBack;
     }
 }
