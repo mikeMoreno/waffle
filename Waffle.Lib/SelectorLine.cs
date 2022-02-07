@@ -50,7 +50,8 @@ namespace Waffle.Lib
         {
             if (ItemType != ItemType.TextFile &&
                 ItemType != ItemType.Submenu &&
-                ItemType != ItemType.Search
+                ItemType != ItemType.Search &&
+                ItemType != ItemType.PNG
             )
             {
                 return null;
@@ -81,6 +82,7 @@ namespace Waffle.Lib
                 "h" => ItemType.HTML,
                 "i" => ItemType.Info,
                 "s" => ItemType.SoundFile,
+                "p" => ItemType.PNG,
                 _ => ItemType.Unknown
             };
         }

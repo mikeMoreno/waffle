@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace Waffle.Lib
 {
-    public enum ResponseType
+    public class PngResponse : Response
     {
-        Menu,
-        TextFile,
-        PNG,
-        Unknown
+        public Image Image { get; set; }
     }
 }

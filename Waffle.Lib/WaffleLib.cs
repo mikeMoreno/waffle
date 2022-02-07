@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -18,6 +19,7 @@ namespace Waffle.Lib
             {
                 ResponseType.Menu => await GetMenuAsync(absoluteUrl),
                 ResponseType.TextFile => await GetTextFileAsync(absoluteUrl),
+                ResponseType.PNG => await GetPngFileAsync(absoluteUrl),
                 _ => throw new InvalidOperationException($"Unknown link type: {absoluteUrl}"),
             };
         }
@@ -68,6 +70,24 @@ namespace Waffle.Lib
             };
         }
 
+        public async Task<PngResponse> GetPngFileAsync(string absoluteUrl)
+        {
+            ValidateUrl(absoluteUrl);
+
+            var parsedUrl = ParseUrl(absoluteUrl);
+
+            using var reader = new GopherStreamReader();
+
+            await reader.OpenAsync(parsedUrl);
+
+            var bytes = await reader.ReadPng();
+
+            return new PngResponse()
+            {
+                Image = Image.FromStream(new MemoryStream(bytes)),
+            };
+        }
+
         public ResponseType GetLinkType(string absoluteUrl)
         {
             ValidateUrl(absoluteUrl);
@@ -83,6 +103,10 @@ namespace Waffle.Lib
             else if (urlPart.StartsWith('1'))
             {
                 return ResponseType.Menu;
+            }
+            else if (urlPart.StartsWith('p'))
+            {
+                return ResponseType.PNG;
             }
             else
             {

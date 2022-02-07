@@ -57,6 +57,14 @@ namespace Waffle
                 {
                     label = BuildLinkLabel(x: 10, y, line);
                 }
+                else if (line.ItemType == ItemType.Image)
+                {
+                    label = BuildLinkLabel(x: 10, y, line);
+                }
+                else if (line.ItemType == ItemType.PNG)
+                {
+                    label = BuildLinkLabel(x: 10, y, line);
+                }
                 else
                 {
                     label = BuildUnknownTypeLabel(x: 10, y, line);
@@ -91,6 +99,39 @@ namespace Waffle
 
                 y += 20;
             }
+        }
+
+        public void Render(PngResponse response)
+        {
+            Controls.Clear();
+
+            var pictureBox = new PictureBox()
+            {
+                Image = response.Image,
+                Dock = DockStyle.Fill,
+            };
+
+            Controls.Add(pictureBox);
+
+            //var y = 10;
+
+            //foreach (var line in response.Text.Split("\r\n"))
+            //{
+            //    Label label;
+
+            //    if (IsLink(line))
+            //    {
+            //        label = BuildLinkLabel(x: 10, y, line);
+            //    }
+            //    else
+            //    {
+            //        label = BuildLabel(x: 10, y, line);
+            //    }
+
+            //    Controls.Add(label);
+
+            //    y += 20;
+            //}
         }
 
         private bool IsLink(string line)
@@ -140,6 +181,9 @@ namespace Waffle
                     case ResponseType.TextFile:
                         Render(await WaffleLib.GetTextFileAsync(line));
                         break;
+                    case ResponseType.PNG:
+                        Render(await WaffleLib.GetPngFileAsync(line));
+                        break;
                     default:
                         Render(await WaffleLib.GetMenuAsync(line));
                         break;
@@ -188,6 +232,14 @@ namespace Waffle
                     LinkClicked?.Invoke(this, new LinkClickedEventArgs(selectorLine.GetLink()));
 
                     var response = await WaffleLib.GetMenuAsync(selectorLine.GetLink());
+
+                    Render(response);
+                }
+                else if (selectorLine.ItemType == ItemType.PNG)
+                {
+                    LinkClicked?.Invoke(this, new LinkClickedEventArgs(selectorLine.GetLink()));
+
+                    var response = await WaffleLib.GetPngFileAsync(selectorLine.GetLink());
 
                     Render(response);
                 }

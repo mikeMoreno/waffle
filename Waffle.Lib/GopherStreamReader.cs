@@ -42,7 +42,7 @@ namespace Waffle.Lib
                 return urlPart;
             }
 
-            if(urlPart[..urlPart.IndexOf('/')].Length == 1)
+            if (urlPart[..urlPart.IndexOf('/')].Length == 1)
             {
                 return urlPart[(urlPart.IndexOf('/') + 1)..];
             }
@@ -136,6 +136,27 @@ namespace Waffle.Lib
             var responseString = Encoding.ASCII.GetString(byteLine.ToArray());
 
             return responseString;
+        }
+
+        public async Task<byte[]> ReadPng()
+        {
+            var byteLine = new List<byte>();
+
+            while (true)
+            {
+                var responseBuffer = new byte[50000];
+
+                var bytesRead = await socc.ReceiveAsync(responseBuffer, SocketFlags.None);
+
+                if (bytesRead == 0)
+                {
+                    break;
+                }
+
+                byteLine.AddRange(responseBuffer[..bytesRead]);
+            }
+
+            return byteLine.ToArray();
         }
 
         public void Dispose()

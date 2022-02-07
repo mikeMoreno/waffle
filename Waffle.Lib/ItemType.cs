@@ -21,6 +21,7 @@ namespace Waffle.Lib
         HTML,
         Info,
         SoundFile,
+        PNG,
         Unknown,
     }
 }
