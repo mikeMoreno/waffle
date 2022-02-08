@@ -43,7 +43,37 @@ namespace Waffle
                 return;
             }
 
-            var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().Single();
+            //var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().Single();
+            SetUrlTextBoxText(selectedTab);
+
+            //if (pageRenderer.StandbyText != null)
+            //{
+            //    txtUrl.Text = pageRenderer.StandbyText;
+            //}
+            //else
+            //{
+            //    if (pageRenderer.VisitedUrls.TryPeek(out (string currentUrl, ItemType _) result))
+            //    {
+            //        if (result.currentUrl != "<home>")
+            //        {
+            //            txtUrl.Text = result.currentUrl;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        txtUrl.Text = "";
+            //    }
+            //}
+        }
+
+        private void SetUrlTextBoxText(TabPage tabPage)
+        {
+            var pageRenderer = tabPage.Controls.OfType<PageRenderer>().SingleOrDefault();
+
+            if (pageRenderer == null)
+            {
+                return;
+            }
 
             if (pageRenderer.StandbyText != null)
             {
@@ -63,6 +93,8 @@ namespace Waffle
                     txtUrl.Text = "";
                 }
             }
+
+
         }
 
         private TabPage SpawnNewTab()
@@ -303,6 +335,8 @@ namespace Waffle
 
             var selectedTab = tabSitePages.SelectedTab;
 
+            int selectedIndex = tabSitePages.SelectedIndex;
+
             if (selectedTab == null)
             {
                 tabSitePages.SelectedIndexChanged += TabSitePages_SelectedIndexChanged;
@@ -317,7 +351,23 @@ namespace Waffle
                 Application.Exit();
             }
 
-            selectedTab = tabSitePages.SelectedTab;
+            if (tabSitePages.TabPages[selectedIndex].Text == "+")
+            {
+                if (selectedIndex == 1)
+                {
+                    tabSitePages.SelectedIndex = 0;
+
+                    selectedTab = tabSitePages.SelectedTab;
+                }
+            }
+            else
+            {
+                tabSitePages.SelectedIndex = selectedIndex;
+
+                selectedTab = tabSitePages.SelectedTab;
+            }
+
+            SetUrlTextBoxText(selectedTab);
 
             var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().SingleOrDefault();
 
