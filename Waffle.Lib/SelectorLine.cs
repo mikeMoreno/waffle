@@ -52,6 +52,7 @@ namespace Waffle.Lib
                 ItemType != ItemType.Menu &&
                 ItemType != ItemType.Search &&
                 ItemType != ItemType.PNG &&
+                ItemType != ItemType.Image &&
                 ItemType != ItemType.BinaryFile
             )
             {

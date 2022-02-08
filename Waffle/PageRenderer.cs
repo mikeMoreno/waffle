@@ -22,6 +22,8 @@ namespace Waffle
 
         private Image CurrentlyDisplayedPng { get; set; }
 
+        private Image CurrentlyDisplayedImage { get; set; }
+
         public ItemType CurrentPageType { get; set; }
 
         public WaffleLib WaffleLib { get; set; }
@@ -187,6 +189,25 @@ namespace Waffle
             btnViewSource.Enabled = false;
         }
 
+        public void Render(ImageResponse response)
+        {
+            Controls.Clear();
+
+            var pictureBox = new PictureBox()
+            {
+                Image = response.Image,
+                Dock = DockStyle.Fill,
+            };
+
+            Controls.Add(pictureBox);
+
+            CurrentlyDisplayedImage = response.Image;
+
+            CurrentPageType = ItemType.Image;
+
+            btnViewSource.Enabled = false;
+        }
+
         public void ViewSource(TextResponse response)
         {
             Render(response);
@@ -246,6 +267,9 @@ namespace Waffle
                         break;
                     case ItemType.PNG:
                         Render(await WaffleLib.GetPngFileAsync(line));
+                        break;
+                    case ItemType.Image:
+                        Render(await WaffleLib.GetImageFileAsync(line));
                         break;
                     case ItemType.BinaryFile:
                         var response = await WaffleLib.GetBinaryFile(line);
@@ -323,6 +347,14 @@ namespace Waffle
 
                     Render(response);
                 }
+                else if (selectorLine.ItemType == ItemType.Image)
+                {
+                    LinkClicked?.Invoke(this, new LinkClickedEventArgs(selectorLine.GetLink(), selectorLine.ItemType));
+
+                    var response = await WaffleLib.GetImageFileAsync(selectorLine.GetLink());
+
+                    Render(response);
+                }
                 else if (selectorLine.ItemType == ItemType.BinaryFile)
                 {
                     var response = await WaffleLib.GetBinaryFile(selectorLine.GetLink());
@@ -377,6 +409,11 @@ namespace Waffle
                 saveFileDialog.DefaultExt = ".png";
                 saveFileDialog.Filter = "PNG Files (*.png)|*.png";
             }
+            else if (CurrentPageType == ItemType.Image)
+            {
+                saveFileDialog.DefaultExt = ".jpg";
+                saveFileDialog.Filter = "JPG Files (*.jpg)|*.jpg";
+            }
             else if (CurrentPageType == ItemType.GopherSourceCode)
             {
                 saveFileDialog.DefaultExt = ".waffle";
@@ -406,6 +443,10 @@ namespace Waffle
             else if (CurrentPageType == ItemType.PNG)
             {
                 CurrentlyDisplayedPng.Save(saveFileDialog.FileName, ImageFormat.Png);
+            }
+            else if (CurrentPageType == ItemType.Image)
+            {
+                CurrentlyDisplayedImage.Save(saveFileDialog.FileName, ImageFormat.Jpeg);
             }
             else
             {

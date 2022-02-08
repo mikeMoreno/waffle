@@ -88,6 +88,24 @@ namespace Waffle.Lib
             };
         }
 
+        public async Task<ImageResponse> GetImageFileAsync(string absoluteUrl)
+        {
+            ValidateUrl(absoluteUrl);
+
+            var parsedUrl = ParseUrl(absoluteUrl);
+
+            using var reader = new GopherStreamReader();
+
+            await reader.OpenAsync(parsedUrl);
+
+            var bytes = await reader.ReadAllBytesAsync();
+
+            return new ImageResponse()
+            {
+                Image = Image.FromStream(new MemoryStream(bytes)),
+            };
+        }
+
         public async Task<BinaryResponse> GetBinaryFile(string absoluteUrl)
         {
             ValidateUrl(absoluteUrl);

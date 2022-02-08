@@ -188,6 +188,11 @@ namespace Waffle
 
             absoluteUrl = absoluteUrl.Trim();
 
+            if (itemType == ItemType.Unknown)
+            {
+                itemType = AttemptToGuessItemType(absoluteUrl, itemType);
+            }
+
             switch (itemType)
             {
                 case ItemType.Menu:
@@ -198,11 +203,55 @@ namespace Waffle
                     Text = $"Waffle - {itemType}";
                     pageRenderer.Render(await WaffleLib.GetTextFileAsync(absoluteUrl));
                     break;
+                case ItemType.PNG:
+                    Text = $"Waffle - {itemType}";
+                    pageRenderer.Render(await WaffleLib.GetPngFileAsync(absoluteUrl));
+                    break;
+                case ItemType.Image:
+                    Text = $"Waffle - {itemType}";
+                    pageRenderer.Render(await WaffleLib.GetImageFileAsync(absoluteUrl));
+                    break;
                 default:
                     Text = "Waffle";
                     pageRenderer.Render(await WaffleLib.GetMenuAsync(absoluteUrl));
                     break;
             }
+        }
+
+        private ItemType AttemptToGuessItemType(string absoluteUrl, ItemType itemType)
+        {
+            if (itemType != ItemType.Unknown)
+            {
+                // No Need to guess.
+                return itemType;
+            }
+
+            if (absoluteUrl.EndsWith(".jpg"))
+            {
+                return ItemType.Image;
+            }
+
+            if (absoluteUrl.EndsWith(".png"))
+            {
+                return ItemType.PNG;
+            }
+
+            if (absoluteUrl.EndsWith(".tar.gz"))
+            {
+                return ItemType.BinaryFile;
+            }
+
+            if (absoluteUrl.EndsWith(".zip"))
+            {
+                return ItemType.BinaryFile;
+            }
+
+            if (absoluteUrl.EndsWith(".txt"))
+            {
+                return ItemType.Text;
+            }
+
+            return ItemType.Unknown;
         }
 
         private void txtUrl_Leave(object sender, EventArgs e)
