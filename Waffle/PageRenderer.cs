@@ -38,6 +38,10 @@ namespace Waffle
 
         public event ViewSourceEventHandler ViewingSource;
 
+        public delegate void CloseTabEventHandler(object sender, EventArgs e);
+
+        public event CloseTabEventHandler CloseTab;
+
         private PageRenderer()
         {
             InitializeComponent();
@@ -384,6 +388,11 @@ namespace Waffle
             };
 
             return pageRenderer;
+        }
+
+        private void btnCloseTab_Click(object sender, EventArgs e)
+        {
+            CloseTab?.Invoke(this, new EventArgs());
         }
     }
 }

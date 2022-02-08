@@ -12,10 +12,11 @@ namespace Waffle
 
             WaffleLib = waffleLib;
 
-            var pageRenderer = PageRenderer.Instance(WaffleLib);
+            var pageRenderer = BuildPageRenderer(WaffleLib);
 
             pageRenderer.LinkClicked += PageRenderer_LinkClicked;
             pageRenderer.ViewingSource += PageRenderer_ViewingSource;
+            pageRenderer.CloseTab += PageRenderer_CloseTab;
 
             var defaultTab = tabSitePages.TabPages[0];
             defaultTab.Controls.Add(pageRenderer);
@@ -27,6 +28,16 @@ namespace Waffle
                 var siteToVisit = Program.CliArgs.First();
 
                 _ = VisitSiteAsync(siteToVisit);
+            }
+        }
+
+        private void PageRenderer_CloseTab(object sender, EventArgs e)
+        {
+            var selectedTab = tabSitePages.SelectedTab;
+
+            if (selectedTab == null)
+            {
+                return;
             }
         }
 
@@ -70,7 +81,7 @@ namespace Waffle
 
         private TabPage SpawnNewTab()
         {
-            var pageRenderer = PageRenderer.Instance(WaffleLib);
+            var pageRenderer = BuildPageRenderer(WaffleLib);
 
             var tabPage = new TabPage
             {
@@ -211,6 +222,17 @@ namespace Waffle
             var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().Single();
 
             pageRenderer.StandbyText = txtUrl.Text;
+        }
+
+        private PageRenderer BuildPageRenderer(WaffleLib waffleLib)
+        {
+            var pageRenderer = PageRenderer.Instance(waffleLib);
+
+            pageRenderer.LinkClicked += PageRenderer_LinkClicked;
+            pageRenderer.ViewingSource += PageRenderer_ViewingSource;
+            pageRenderer.CloseTab += PageRenderer_CloseTab;
+
+            return pageRenderer;
         }
     }
 }
