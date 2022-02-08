@@ -115,9 +115,11 @@ namespace Waffle
             this.Controls.Add(this.btnGo);
             this.Controls.Add(this.txtUrl);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Waffle";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Main_KeyDown);
             this.tabSitePages.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

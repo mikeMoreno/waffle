@@ -34,8 +34,8 @@ namespace Waffle
             this.pageRendererContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.btnSavePage = new System.Windows.Forms.ToolStripMenuItem();
             this.btnViewSource = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnCloseTab = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnCloseTab = new System.Windows.Forms.ToolStripMenuItem();
             this.pageRendererContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,18 +64,17 @@ namespace Waffle
             this.btnViewSource.Text = "View Source";
             this.btnViewSource.Click += new System.EventHandler(this.btnViewSource_Click);
             // 
-            // btnCloseTab
-            // 
-            this.btnCloseTab.Name = "btnCloseTab";
-            this.btnCloseTab.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
-            this.btnCloseTab.Size = new System.Drawing.Size(180, 22);
-            this.btnCloseTab.Text = "Close";
-            this.btnCloseTab.Click += new System.EventHandler(this.btnCloseTab_Click);
-            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // btnCloseTab
+            // 
+            this.btnCloseTab.Name = "btnCloseTab";
+            this.btnCloseTab.Size = new System.Drawing.Size(180, 22);
+            this.btnCloseTab.Text = "Close";
+            this.btnCloseTab.Click += new System.EventHandler(this.btnCloseTab_Click);
             // 
             // PageRenderer
             // 

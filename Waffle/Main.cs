@@ -14,10 +14,6 @@ namespace Waffle
 
             var pageRenderer = BuildPageRenderer(WaffleLib);
 
-            pageRenderer.LinkClicked += PageRenderer_LinkClicked;
-            pageRenderer.ViewingSource += PageRenderer_ViewingSource;
-            pageRenderer.CloseTab += PageRenderer_CloseTab;
-
             var defaultTab = tabSitePages.TabPages[0];
             defaultTab.Controls.Add(pageRenderer);
 
@@ -28,16 +24,6 @@ namespace Waffle
                 var siteToVisit = Program.CliArgs.First();
 
                 _ = VisitSiteAsync(siteToVisit);
-            }
-        }
-
-        private void PageRenderer_CloseTab(object sender, EventArgs e)
-        {
-            var selectedTab = tabSitePages.SelectedTab;
-
-            if (selectedTab == null)
-            {
-                return;
             }
         }
 
@@ -219,6 +205,12 @@ namespace Waffle
         private void txtUrl_Leave(object sender, EventArgs e)
         {
             var selectedTab = tabSitePages.SelectedTab;
+
+            if (selectedTab == null)
+            {
+                return;
+            }
+
             var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().Single();
 
             pageRenderer.StandbyText = txtUrl.Text;
@@ -233,6 +225,56 @@ namespace Waffle
             pageRenderer.CloseTab += PageRenderer_CloseTab;
 
             return pageRenderer;
+        }
+
+        private void PageRenderer_CloseTab(object sender, EventArgs e)
+        {
+            CloseTab();
+        }
+
+        private void Main_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Modifiers == Keys.Control && e.KeyCode == Keys.W)
+            {
+                CloseTab();
+            }
+
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.T)
+            {
+                OpenTab();
+            }
+        }
+
+        private void CloseTab()
+        {
+            tabSitePages.SelectedIndexChanged -= TabSitePages_SelectedIndexChanged;
+
+            var selectedTab = tabSitePages.SelectedTab;
+
+            if (selectedTab == null)
+            {
+                tabSitePages.SelectedIndexChanged += TabSitePages_SelectedIndexChanged;
+
+                return;
+            }
+
+            tabSitePages.TabPages.Remove(selectedTab);
+
+            if (tabSitePages.TabPages.Count == 1)
+            {
+                Application.Exit();
+            }
+
+            tabSitePages.SelectedIndexChanged += TabSitePages_SelectedIndexChanged;
+        }
+
+        private void OpenTab()
+        {
+            tabSitePages.SelectedIndexChanged -= TabSitePages_SelectedIndexChanged;
+
+            SpawnNewTab();
+
+            tabSitePages.SelectedIndexChanged += TabSitePages_SelectedIndexChanged;
         }
     }
 }
