@@ -58,9 +58,9 @@ namespace Waffle.Lib
 
             foreach (var line in lines)
             {
-                if (line != ".\r\n")
+                if (line != ".")
                 {
-                    fileContents.Append(line);
+                    fileContents.AppendLine(line);
                 }
             }
 
@@ -80,7 +80,7 @@ namespace Waffle.Lib
 
             await reader.OpenAsync(parsedUrl);
 
-            var bytes = await reader.ReadPng();
+            var bytes = await reader.ReadAllBytesAsync();
 
             return new PngResponse()
             {

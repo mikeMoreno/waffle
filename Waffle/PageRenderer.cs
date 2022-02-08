@@ -121,7 +121,7 @@ namespace Waffle
 
                 y += 20;
 
-                text.Append(line.Raw);
+                text.AppendLine(line.Raw);
             }
 
             CurrentlyDisplayedText = text.ToString();

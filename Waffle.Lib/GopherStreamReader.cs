@@ -35,6 +35,43 @@ namespace Waffle.Lib
             await socc.SendAsync(data, SocketFlags.None);
         }
 
+        public async Task<string[]> ReadAllLinesAsync()
+        {
+            var bytes = await ReadAllBytesAsync();
+
+            var responseString = Encoding.ASCII.GetString(bytes);
+
+            var lines = responseString.Split("\r\n");
+
+            return lines.ToArray();
+        }
+
+        public async Task<byte[]> ReadAllBytesAsync()
+        {
+            var byteLine = new List<byte>();
+
+            while (true)
+            {
+                var responseBuffer = new byte[5_000_000];
+
+                var bytesRead = await socc.ReceiveAsync(responseBuffer, SocketFlags.None);
+
+                if (bytesRead == 0)
+                {
+                    break;
+                }
+
+                byteLine.AddRange(responseBuffer[..bytesRead]);
+            }
+
+            return byteLine.ToArray();
+        }
+
+        public void Dispose()
+        {
+            socc.Dispose();
+        }
+
         private static string ParseHost(string absoluteUrl)
         {
             var host = absoluteUrl;
@@ -91,12 +128,12 @@ namespace Waffle.Lib
                 path = absoluteUrl[(absoluteUrl.IndexOf('/') + 1)..];
             }
 
-            if(path == null)
+            if (path == null)
             {
                 return null;
             }
 
-            if(!path.Contains('/'))
+            if (!path.Contains('/'))
             {
                 return path;
             }
@@ -107,107 +144,6 @@ namespace Waffle.Lib
             }
 
             return path;
-        }
-
-        public bool HasMoreLines
-        {
-            get
-            {
-                if (socc == null)
-                {
-                    return false;
-                }
-
-                var started = DateTime.Now;
-
-                while (socc.Available == 0)
-                {
-                    var waitFor = TimeSpan.FromMilliseconds(200);
-
-                    if (DateTime.Now.Subtract(started).Milliseconds > waitFor.Milliseconds)
-                    {
-                        return false;
-                    }
-                }
-
-                return socc.Available > 0;
-            }
-        }
-
-        public async Task<string[]> ReadAllLinesAsync()
-        {
-            var lines = new List<string>();
-
-            while (HasMoreLines)
-            {
-                var line = await ReadLineAsync();
-
-                lines.Add(line);
-            }
-
-            return lines.ToArray();
-        }
-
-        public async Task<string> ReadLineAsync()
-        {
-            if (!HasMoreLines)
-            {
-                throw new InvalidOperationException("No more lines to read! :(");
-            }
-
-            var byteLine = new List<byte>();
-
-            while (true)
-            {
-                var responseBuffer = new byte[1];
-
-                var bytesRead = await socc.ReceiveAsync(responseBuffer, SocketFlags.None);
-
-                if (bytesRead == 0)
-                {
-                    break;
-                }
-
-                var currentByte = responseBuffer[0];
-                byte? lastByte = byteLine.Any() ? byteLine.Last() : null;
-
-                byteLine.Add(currentByte);
-
-                if (currentByte == 10 && lastByte.GetValueOrDefault() == 13)
-                {
-                    break;
-                }
-            }
-
-            var responseString = Encoding.ASCII.GetString(byteLine.ToArray());
-
-            return responseString;
-        }
-
-        public async Task<byte[]> ReadPng()
-        {
-            var byteLine = new List<byte>();
-
-            while (true)
-            {
-                var responseBuffer = new byte[50000];
-
-                var bytesRead = await socc.ReceiveAsync(responseBuffer, SocketFlags.None);
-
-                if (bytesRead == 0)
-                {
-                    break;
-                }
-
-                byteLine.AddRange(responseBuffer[..bytesRead]);
-            }
-
-            return byteLine.ToArray();
-        }
-
-        public void Dispose()
-        {
-            socc.Dispose();
         }
     }
 }
