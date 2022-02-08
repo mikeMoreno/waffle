@@ -1,7 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Windows.Forms;
 using Waffle.Lib;
 
 namespace Waffle
@@ -15,13 +13,12 @@ namespace Waffle
         /// </summary>
         [STAThread]
         static void Main(string[] args)
-        {
+        {   
+            ApplicationConfiguration.Initialize();
+            
             CliArgs = args;
 
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
-            //Application.Run(new Main(new WaffleLib()));
+            SetupApplicationFolder();
 
             using IHost host = Host.CreateDefaultBuilder()
                 .ConfigureServices((_, services) => services
@@ -34,6 +31,14 @@ namespace Waffle
                 var services = serviceScope.ServiceProvider;
 
                 Application.Run(services.GetRequiredService<Main>());
+            }
+        }
+
+        private static void SetupApplicationFolder()
+        {
+            if (!Directory.Exists(Globals.ApplicationFolder))
+            {
+                Directory.CreateDirectory(Globals.ApplicationFolder);
             }
         }
     }

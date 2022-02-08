@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Waffle.Globals\Waffle.Globals.csproj" />
     <ProjectReference Include="..\Waffle.Lib\Waffle.Lib.csproj" />
   </ItemGroup>
 

@@ -46,9 +46,9 @@ namespace Waffle
             // 
             // txtUrl
             // 
-            this.txtUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.txtUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtUrl.Location = new System.Drawing.Point(12, 414);
+            this.txtUrl.Location = new System.Drawing.Point(12, 42);
             this.txtUrl.Name = "txtUrl";
             this.txtUrl.Size = new System.Drawing.Size(611, 23);
             this.txtUrl.TabIndex = 1;
@@ -56,8 +56,8 @@ namespace Waffle
             // 
             // btnGo
             // 
-            this.btnGo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnGo.Location = new System.Drawing.Point(713, 413);
+            this.btnGo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGo.Location = new System.Drawing.Point(709, 42);
             this.btnGo.Name = "btnGo";
             this.btnGo.Size = new System.Drawing.Size(75, 23);
             this.btnGo.TabIndex = 2;
@@ -67,9 +67,9 @@ namespace Waffle
             // 
             // btnBack
             // 
-            this.btnBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnBack.Enabled = false;
-            this.btnBack.Location = new System.Drawing.Point(629, 413);
+            this.btnBack.Location = new System.Drawing.Point(629, 42);
             this.btnBack.Name = "btnBack";
             this.btnBack.Size = new System.Drawing.Size(75, 23);
             this.btnBack.TabIndex = 4;
@@ -84,10 +84,10 @@ namespace Waffle
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabSitePages.Controls.Add(this.tabDefaultTab);
             this.tabSitePages.Controls.Add(this.tabNewTab);
-            this.tabSitePages.Location = new System.Drawing.Point(12, 27);
+            this.tabSitePages.Location = new System.Drawing.Point(12, 71);
             this.tabSitePages.Name = "tabSitePages";
             this.tabSitePages.SelectedIndex = 0;
-            this.tabSitePages.Size = new System.Drawing.Size(776, 380);
+            this.tabSitePages.Size = new System.Drawing.Size(776, 438);
             this.tabSitePages.TabIndex = 5;
             // 
             // tabDefaultTab
@@ -96,7 +96,7 @@ namespace Waffle
             this.tabDefaultTab.Location = new System.Drawing.Point(4, 24);
             this.tabDefaultTab.Name = "tabDefaultTab";
             this.tabDefaultTab.Padding = new System.Windows.Forms.Padding(3);
-            this.tabDefaultTab.Size = new System.Drawing.Size(768, 352);
+            this.tabDefaultTab.Size = new System.Drawing.Size(768, 410);
             this.tabDefaultTab.TabIndex = 0;
             this.tabDefaultTab.Text = "New Tab";
             // 
@@ -104,7 +104,7 @@ namespace Waffle
             // 
             this.tabNewTab.Location = new System.Drawing.Point(4, 24);
             this.tabNewTab.Name = "tabNewTab";
-            this.tabNewTab.Size = new System.Drawing.Size(768, 325);
+            this.tabNewTab.Size = new System.Drawing.Size(768, 410);
             this.tabNewTab.TabIndex = 1;
             this.tabNewTab.Text = "+";
             this.tabNewTab.UseVisualStyleBackColor = true;
@@ -138,7 +138,7 @@ namespace Waffle
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 521);
             this.Controls.Add(this.tabSitePages);
             this.Controls.Add(this.btnBack);
             this.Controls.Add(this.btnGo);
