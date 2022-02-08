@@ -40,6 +40,7 @@ namespace Waffle
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnFavorite = new System.Windows.Forms.Button();
             this.tabSitePages.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -48,9 +49,9 @@ namespace Waffle
             // 
             this.txtUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtUrl.Location = new System.Drawing.Point(12, 42);
+            this.txtUrl.Location = new System.Drawing.Point(44, 42);
             this.txtUrl.Name = "txtUrl";
-            this.txtUrl.Size = new System.Drawing.Size(611, 23);
+            this.txtUrl.Size = new System.Drawing.Size(579, 23);
             this.txtUrl.TabIndex = 1;
             this.txtUrl.Leave += new System.EventHandler(this.txtUrl_Leave);
             // 
@@ -134,11 +135,22 @@ namespace Waffle
             this.btnExit.Text = "Exit";
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
+            // btnFavorite
+            // 
+            this.btnFavorite.Image = ((System.Drawing.Image)(resources.GetObject("btnFavorite.Image")));
+            this.btnFavorite.Location = new System.Drawing.Point(12, 40);
+            this.btnFavorite.Name = "btnFavorite";
+            this.btnFavorite.Size = new System.Drawing.Size(30, 25);
+            this.btnFavorite.TabIndex = 7;
+            this.btnFavorite.UseVisualStyleBackColor = true;
+            this.btnFavorite.Click += new System.EventHandler(this.btnFavorite_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 521);
+            this.Controls.Add(this.btnFavorite);
             this.Controls.Add(this.tabSitePages);
             this.Controls.Add(this.btnBack);
             this.Controls.Add(this.btnGo);
@@ -169,5 +181,6 @@ namespace Waffle
         private MenuStrip menuStrip1;
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem btnExit;
+        private Button btnFavorite;
     }
 }

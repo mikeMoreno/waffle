@@ -43,27 +43,7 @@ namespace Waffle
                 return;
             }
 
-            //var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().Single();
             SetUrlTextBoxText(selectedTab);
-
-            //if (pageRenderer.StandbyText != null)
-            //{
-            //    txtUrl.Text = pageRenderer.StandbyText;
-            //}
-            //else
-            //{
-            //    if (pageRenderer.VisitedUrls.TryPeek(out (string currentUrl, ItemType _) result))
-            //    {
-            //        if (result.currentUrl != "<home>")
-            //        {
-            //            txtUrl.Text = result.currentUrl;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        txtUrl.Text = "";
-            //    }
-            //}
         }
 
         private void SetUrlTextBoxText(TabPage tabPage)
@@ -93,8 +73,6 @@ namespace Waffle
                     txtUrl.Text = "";
                 }
             }
-
-
         }
 
         private TabPage SpawnNewTab()
@@ -391,6 +369,19 @@ namespace Waffle
         private void btnExit_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void btnFavorite_Click(object sender, EventArgs e)
+        {
+            var favAdder = new FavoriteAdder(txtUrl.Text);
+
+            var ans = favAdder.ShowDialog();
+
+            if(ans == DialogResult.OK)
+            {
+
+            }
+            
         }
     }
 }
