@@ -99,6 +99,8 @@ namespace Waffle
 
         private void PageRenderer_ViewingSource(object sender, ViewSourceEventArgs e)
         {
+            tabSitePages.SelectedIndexChanged -= TabSitePages_SelectedIndexChanged;
+
             var newTab = SpawnNewTab();
             newTab.Text = "viewing source";
             var pageRenderer = newTab.Controls.OfType<PageRenderer>().Single();
@@ -110,6 +112,7 @@ namespace Waffle
 
             pageRenderer.ViewSource(textResponse);
 
+            tabSitePages.SelectedIndexChanged += TabSitePages_SelectedIndexChanged;
         }
 
         private async void btnGo_Click(object sender, EventArgs e)
@@ -263,6 +266,15 @@ namespace Waffle
             if (tabSitePages.TabPages.Count == 1)
             {
                 Application.Exit();
+            }
+
+            selectedTab = tabSitePages.SelectedTab;
+
+            var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().Single();
+
+            if (pageRenderer.VisitedUrls.Any())
+            {
+                btnBack.Enabled = true;
             }
 
             tabSitePages.SelectedIndexChanged += TabSitePages_SelectedIndexChanged;
