@@ -51,7 +51,8 @@ namespace Waffle.Lib
             if (ItemType != ItemType.Text &&
                 ItemType != ItemType.Menu &&
                 ItemType != ItemType.Search &&
-                ItemType != ItemType.PNG
+                ItemType != ItemType.PNG &&
+                ItemType != ItemType.BinaryFile
             )
             {
                 return null;

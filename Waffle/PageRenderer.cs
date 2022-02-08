@@ -77,8 +77,6 @@ namespace Waffle
 
             var text = new StringBuilder();
 
-            var currentlyViewedSelectorLines = new List<SelectorLine>();
-
             var lines = response.Lines;
 
             var y = 10;
@@ -109,6 +107,10 @@ namespace Waffle
                     label = BuildLinkLabel(x: 10, y, line);
                 }
                 else if (line.ItemType == ItemType.PNG)
+                {
+                    label = BuildLinkLabel(x: 10, y, line);
+                }
+                else if (line.ItemType == ItemType.BinaryFile)
                 {
                     label = BuildLinkLabel(x: 10, y, line);
                 }
@@ -229,7 +231,10 @@ namespace Waffle
             {
                 var itemType = WaffleLib.GetItemType(line);
 
-                LinkClicked?.Invoke(this, new LinkClickedEventArgs(line, itemType));
+                if(itemType != ItemType.BinaryFile)
+                {
+                    LinkClicked?.Invoke(this, new LinkClickedEventArgs(line, itemType));
+                }
 
                 switch (itemType)
                 {
@@ -241,6 +246,23 @@ namespace Waffle
                         break;
                     case ItemType.PNG:
                         Render(await WaffleLib.GetPngFileAsync(line));
+                        break;
+                    case ItemType.BinaryFile:
+                        var response = await WaffleLib.GetBinaryFile(line);
+
+                        var fileName = line[(line.LastIndexOf('/') + 1)..];
+
+                        var fsDialog = new SaveFileDialog
+                        {
+                            FileName = fileName
+                        };
+
+                        var ans = fsDialog.ShowDialog();
+
+                        if (ans == DialogResult.OK)
+                        {
+                            File.WriteAllBytes(fsDialog.FileName, response.Bytes);
+                        }
                         break;
                     default:
                         Render(await WaffleLib.GetMenuAsync(line));
@@ -300,6 +322,24 @@ namespace Waffle
                     var response = await WaffleLib.GetPngFileAsync(selectorLine.GetLink());
 
                     Render(response);
+                }
+                else if (selectorLine.ItemType == ItemType.BinaryFile)
+                {
+                    var response = await WaffleLib.GetBinaryFile(selectorLine.GetLink());
+
+                    var fileName = selectorLine.Selector[(selectorLine.Selector.LastIndexOf('/') + 1)..];
+
+                    var fsDialog = new SaveFileDialog
+                    {
+                        FileName = fileName
+                    };
+
+                    var ans = fsDialog.ShowDialog();
+
+                    if (ans == DialogResult.OK)
+                    {
+                        File.WriteAllBytes(fsDialog.FileName, response.Bytes);
+                    }
                 }
             };
 

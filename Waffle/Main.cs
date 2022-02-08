@@ -270,9 +270,9 @@ namespace Waffle
 
             selectedTab = tabSitePages.SelectedTab;
 
-            var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().Single();
+            var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().SingleOrDefault();
 
-            if (pageRenderer.VisitedUrls.Any())
+            if (pageRenderer != null && pageRenderer.VisitedUrls.Any())
             {
                 btnBack.Enabled = true;
             }
