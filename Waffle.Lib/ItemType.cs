@@ -3,7 +3,7 @@ namespace Waffle.Lib
 {
     public enum ItemType
     {
-        TextFile,
+        Text,
         Menu,
         Nameserver,
         Error,
@@ -22,6 +22,8 @@ namespace Waffle.Lib
         Info,
         SoundFile,
         PNG,
+
+        Home,
         GopherSourceCode,
         Unknown,
     }

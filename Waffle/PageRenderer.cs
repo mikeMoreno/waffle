@@ -22,11 +22,11 @@ namespace Waffle
 
         private Image CurrentlyDisplayedPng { get; set; }
 
-        private ItemType CurrentPageType { get; set; }
+        public ItemType CurrentPageType { get; set; }
 
         public WaffleLib WaffleLib { get; set; }
 
-        public Stack<string> VisitedUrls { get; } = new Stack<string>();
+        public Stack<(string, ItemType)> VisitedUrls { get; } = new Stack<(string, ItemType)>();
 
         public string StandbyText { get; set; }
 
@@ -92,7 +92,7 @@ namespace Waffle
                 {
                     label = BuildLabel(x: 10, y, line);
                 }
-                else if (line.ItemType == ItemType.TextFile)
+                else if (line.ItemType == ItemType.Text)
                 {
                     label = BuildLinkLabel(x: 10, y, line);
                 }
@@ -157,7 +157,7 @@ namespace Waffle
 
             CurrentlyDisplayedText = text.ToString();
 
-            CurrentPageType = ItemType.TextFile;
+            CurrentPageType = ItemType.Text;
 
             btnViewSource.Enabled = false;
         }
@@ -232,7 +232,7 @@ namespace Waffle
                     case ItemType.Menu:
                         Render(await WaffleLib.GetMenuAsync(line));
                         break;
-                    case ItemType.TextFile:
+                    case ItemType.Text:
                         Render(await WaffleLib.GetTextFileAsync(line));
                         break;
                     case ItemType.PNG:
@@ -273,7 +273,7 @@ namespace Waffle
             {
                 var selectorLine = (sender as Label).Tag as SelectorLine;
 
-                if (selectorLine.ItemType == ItemType.TextFile)
+                if (selectorLine.ItemType == ItemType.Text)
                 {
                     LinkClicked?.Invoke(this, new LinkClickedEventArgs(selectorLine.GetLink(), selectorLine.ItemType));
 
@@ -318,7 +318,7 @@ namespace Waffle
                 OverwritePrompt = true,
             };
 
-            if (CurrentPageType == ItemType.TextFile)
+            if (CurrentPageType == ItemType.Text)
             {
                 saveFileDialog.DefaultExt = ".txt";
                 saveFileDialog.Filter = "Text Files (*.txt)|*.txt";
@@ -351,7 +351,7 @@ namespace Waffle
                 return;
             }
 
-            if (CurrentPageType == ItemType.TextFile)
+            if (CurrentPageType == ItemType.Text)
             {
                 File.WriteAllText(saveFileDialog.FileName, CurrentlyDisplayedText);
             }

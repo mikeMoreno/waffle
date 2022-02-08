@@ -18,7 +18,7 @@ namespace Waffle.Lib
             return responseType switch
             {
                 ItemType.Menu => await GetMenuAsync(absoluteUrl),
-                ItemType.TextFile => await GetTextFileAsync(absoluteUrl),
+                ItemType.Text => await GetTextFileAsync(absoluteUrl),
                 ItemType.PNG => await GetPngFileAsync(absoluteUrl),
                 _ => throw new InvalidOperationException($"Unknown link type: {absoluteUrl}"),
             };
@@ -98,7 +98,7 @@ namespace Waffle.Lib
 
             if (itemType == "0")
             {
-                return ItemType.TextFile;
+                return ItemType.Text;
             }
             else if (itemType == "1")
             {

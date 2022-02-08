@@ -54,11 +54,11 @@ namespace Waffle
             }
             else
             {
-                if (pageRenderer.VisitedUrls.TryPeek(out string currentUrl))
+                if (pageRenderer.VisitedUrls.TryPeek(out (string currentUrl, ItemType _) result))
                 {
-                    if (currentUrl != "<home>")
+                    if (result.currentUrl != "<home>")
                     {
-                        txtUrl.Text = currentUrl;
+                        txtUrl.Text = result.currentUrl;
                     }
                 }
                 else
@@ -91,7 +91,7 @@ namespace Waffle
         private void PageRenderer_LinkClicked(object sender, LinkClickedEventArgs e)
         {
             var pageRenderer = sender as PageRenderer;
-            pageRenderer.VisitedUrls.Push(txtUrl.Text.Trim());
+            pageRenderer.VisitedUrls.Push((txtUrl.Text.Trim(), pageRenderer.CurrentPageType));
 
             txtUrl.Text = e.Link;
 
@@ -129,22 +129,24 @@ namespace Waffle
 
             txtUrl.Text = absoluteUrl;
 
+            var itemType = WaffleLib.GetItemType(absoluteUrl);
+
             var selectedTab = tabSitePages.SelectedTab;
 
             var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().Single();
 
             if (!pageRenderer.VisitedUrls.Any())
             {
-                pageRenderer.VisitedUrls.Push("<home>");
+                pageRenderer.VisitedUrls.Push(("<home>", ItemType.Unknown));
             }
             else
             {
-                pageRenderer.VisitedUrls.Push(txtUrl.Text.Trim());
+                pageRenderer.VisitedUrls.Push((txtUrl.Text.Trim(), pageRenderer.CurrentPageType));
             }
 
             btnBack.Enabled = true;
 
-            await RenderUrlAsync(absoluteUrl);
+            await RenderUrlAsync(absoluteUrl, itemType);
         }
 
         private async void btnBack_Click(object sender, EventArgs e)
@@ -152,7 +154,7 @@ namespace Waffle
             var selectedTab = tabSitePages.SelectedTab;
             var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().Single();
 
-            var lastVisitedUrl = pageRenderer.VisitedUrls.Pop();
+            var (lastVisitedUrl, itemType) = pageRenderer.VisitedUrls.Pop();
 
             if (lastVisitedUrl != "<home>")
             {
@@ -171,34 +173,33 @@ namespace Waffle
             if (lastVisitedUrl == "<home>")
             {
                 pageRenderer.Clear();
+                Text = $"Waffle - {ItemType.Home}";
             }
             else
             {
-                await RenderUrlAsync(txtUrl.Text);
+                await RenderUrlAsync(txtUrl.Text, itemType);
             }
         }
 
-        private async Task RenderUrlAsync(string absoluteUrl)
+        private async Task RenderUrlAsync(string absoluteUrl, ItemType itemType)
         {
             var selectedTab = tabSitePages.SelectedTab;
             var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().Single();
 
             absoluteUrl = absoluteUrl.Trim();
 
-            var responseType = WaffleLib.GetItemType(absoluteUrl);
-
-            switch (responseType)
+            switch (itemType)
             {
                 case ItemType.Menu:
-                    Text = "Waffle - Menu";
+                    Text = $"Waffle - {itemType}";
                     pageRenderer.Render(await WaffleLib.GetMenuAsync(absoluteUrl));
                     break;
-                case ItemType.TextFile:
-                    Text = "Waffle - Text";
+                case ItemType.Text:
+                    Text = $"Waffle - {itemType}";
                     pageRenderer.Render(await WaffleLib.GetTextFileAsync(absoluteUrl));
                     break;
                 default:
-                    Text = "Waffle - Unknown";
+                    Text = "Waffle";
                     pageRenderer.Render(await WaffleLib.GetMenuAsync(absoluteUrl));
                     break;
             }

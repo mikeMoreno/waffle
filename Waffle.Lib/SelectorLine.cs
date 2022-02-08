@@ -48,7 +48,7 @@ namespace Waffle.Lib
 
         public string GetLink()
         {
-            if (ItemType != ItemType.TextFile &&
+            if (ItemType != ItemType.Text &&
                 ItemType != ItemType.Menu &&
                 ItemType != ItemType.Search &&
                 ItemType != ItemType.PNG
@@ -64,7 +64,7 @@ namespace Waffle.Lib
         {
             return itemTypePrefix switch
             {
-                "0" => ItemType.TextFile,
+                "0" => ItemType.Text,
                 "1" => ItemType.Menu,
                 "2" => ItemType.Nameserver,
                 "3" => ItemType.Error,
