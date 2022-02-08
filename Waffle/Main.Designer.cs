@@ -37,7 +37,11 @@ namespace Waffle
             this.tabSitePages = new System.Windows.Forms.TabControl();
             this.tabDefaultTab = new System.Windows.Forms.TabPage();
             this.tabNewTab = new System.Windows.Forms.TabPage();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnExit = new System.Windows.Forms.ToolStripMenuItem();
             this.tabSitePages.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtUrl
@@ -80,10 +84,10 @@ namespace Waffle
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabSitePages.Controls.Add(this.tabDefaultTab);
             this.tabSitePages.Controls.Add(this.tabNewTab);
-            this.tabSitePages.Location = new System.Drawing.Point(12, 12);
+            this.tabSitePages.Location = new System.Drawing.Point(12, 27);
             this.tabSitePages.Name = "tabSitePages";
             this.tabSitePages.SelectedIndex = 0;
-            this.tabSitePages.Size = new System.Drawing.Size(776, 395);
+            this.tabSitePages.Size = new System.Drawing.Size(776, 380);
             this.tabSitePages.TabIndex = 5;
             // 
             // tabDefaultTab
@@ -92,7 +96,7 @@ namespace Waffle
             this.tabDefaultTab.Location = new System.Drawing.Point(4, 24);
             this.tabDefaultTab.Name = "tabDefaultTab";
             this.tabDefaultTab.Padding = new System.Windows.Forms.Padding(3);
-            this.tabDefaultTab.Size = new System.Drawing.Size(768, 367);
+            this.tabDefaultTab.Size = new System.Drawing.Size(768, 352);
             this.tabDefaultTab.TabIndex = 0;
             this.tabDefaultTab.Text = "New Tab";
             // 
@@ -100,10 +104,35 @@ namespace Waffle
             // 
             this.tabNewTab.Location = new System.Drawing.Point(4, 24);
             this.tabNewTab.Name = "tabNewTab";
-            this.tabNewTab.Size = new System.Drawing.Size(768, 367);
+            this.tabNewTab.Size = new System.Drawing.Size(768, 325);
             this.tabNewTab.TabIndex = 1;
             this.tabNewTab.Text = "+";
             this.tabNewTab.UseVisualStyleBackColor = true;
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(800, 24);
+            this.menuStrip1.TabIndex = 6;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnExit});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // btnExit
+            // 
+            this.btnExit.Name = "btnExit";
+            this.btnExit.Size = new System.Drawing.Size(93, 22);
+            this.btnExit.Text = "Exit";
+            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
             // Main
             // 
@@ -114,13 +143,17 @@ namespace Waffle
             this.Controls.Add(this.btnBack);
             this.Controls.Add(this.btnGo);
             this.Controls.Add(this.txtUrl);
+            this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Waffle";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Main_KeyDown);
             this.tabSitePages.ResumeLayout(false);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -133,5 +166,8 @@ namespace Waffle
         private TabControl tabSitePages;
         private TabPage tabDefaultTab;
         private TabPage tabNewTab;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem fileToolStripMenuItem;
+        private ToolStripMenuItem btnExit;
     }
 }

@@ -234,7 +234,7 @@ namespace Waffle
 
         private void Main_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Modifiers == Keys.Control && e.KeyCode == Keys.W)
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.W)
             {
                 CloseTab();
             }
@@ -275,6 +275,11 @@ namespace Waffle
             SpawnNewTab();
 
             tabSitePages.SelectedIndexChanged += TabSitePages_SelectedIndexChanged;
+        }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }
