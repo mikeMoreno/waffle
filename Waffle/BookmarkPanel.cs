@@ -130,11 +130,6 @@ namespace Waffle
             this.Parent.Controls.Remove(this);
         }
 
-        private void treeView1_DoubleClick(object sender, EventArgs e)
-        {
-            bookmarkTree.SelectedNode.BeginEdit();
-        }
-
         private void bookmarkTree_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
             BeginInvoke(new Action(() => afterAfterEdit(e.Node)));
@@ -145,20 +140,8 @@ namespace Waffle
             var bookmarkEntity = node.Tag as BookmarkEntity;
 
             bookmarkEntity.Name = node.Text;
-        }
 
-        private void bookmarkTree_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            var node = e.Node;
-
-            if ((node.Tag as BookmarkEntity).BookmarkEntityType != "Bookmark")
-            {
-                return;
-            }
-
-            var bookmark = node.Tag as Bookmark;
-
-            LinkClicked?.Invoke(this, new BookmarkClickedEventArgs(bookmark));
+            SaveBookmarks(BookmarkEntities);
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -175,6 +158,54 @@ namespace Waffle
             bookmarkTree.Nodes.Remove(selectedNode);
 
             SaveBookmarks(BookmarkEntities);
+        }
+
+        private void btnEdit_Click(object sender, EventArgs e)
+        {
+            var selectedNode = bookmarkTree.SelectedNode;
+
+            if (selectedNode == null)
+            {
+                return;
+            }
+
+            var bookmarkEntity = selectedNode.Tag as BookmarkEntity;
+
+            using (var bookmarkEditor = new BookmarkEditor(bookmarkEntity))
+            {
+                var ans = bookmarkEditor.ShowDialog();
+
+                if (ans == DialogResult.OK)
+                {
+                    bookmarkEntity.Name = bookmarkEditor.BookmarkName;
+
+                    if (bookmarkEntity is Bookmark bookmark)
+                    {
+                        bookmark.Url = bookmarkEditor.BookmarkUrl;
+                    }
+                }
+            }
+
+            PopulateBookmarkTree(BookmarkEntities);
+            SaveBookmarks(BookmarkEntities);
+        }
+
+        private void bookmarkTree_MouseDown(object sender, MouseEventArgs e)
+        {
+            var selectedNode = bookmarkTree.GetNodeAt(e.Location);
+
+            if (selectedNode != null)
+            {
+                bookmarkTree.SelectedNode = selectedNode;
+            }
+
+            if (selectedNode != null && e.Button == MouseButtons.Left)
+            {
+                if (bookmarkTree.SelectedNode.Tag is Bookmark bookmark)
+                {
+                    LinkClicked?.Invoke(this, new BookmarkClickedEventArgs(bookmark));
+                }
+            }
         }
     }
 }
