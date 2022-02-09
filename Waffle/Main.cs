@@ -373,15 +373,24 @@ namespace Waffle
 
         private void btnFavorite_Click(object sender, EventArgs e)
         {
-            var favAdder = new FavoriteAdder(txtUrl.Text);
-
-            var ans = favAdder.ShowDialog();
-
-            if(ans == DialogResult.OK)
-            {
-
-            }
+            using var favAdder = new BookmarkAdder(txtUrl.Text);
             
+            var ans = favAdder.ShowDialog();
+        }
+
+        private void btnBookmarks_Click(object sender, EventArgs e)
+        {
+            var bookmarkPanel = new BookmarkPanel()
+            {
+                Dock = DockStyle.Right,
+                Size = new Size()
+                {
+                    Width = 325,
+                }
+            };
+
+            Controls.Add(bookmarkPanel);
+            bookmarkPanel.BringToFront();
         }
     }
 }

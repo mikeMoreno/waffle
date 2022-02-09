@@ -1,6 +1,6 @@
 ﻿namespace Waffle
 {
-    partial class FavoriteAdder
+    partial class BookmarkAdder
     {
         /// <summary>
         /// Required designer variable.
@@ -31,10 +31,9 @@
             this.txtName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.btnRemove = new System.Windows.Forms.Button();
+            this.bookmarkTree = new System.Windows.Forms.TreeView();
             this.SuspendLayout();
             // 
             // txtName
@@ -55,25 +54,13 @@
             // 
             // btnSave
             // 
-            this.btnSave.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnSave.Location = new System.Drawing.Point(210, 143);
+            this.btnSave.Location = new System.Drawing.Point(128, 297);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 2;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(291, 143);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 3;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // label2
             // 
@@ -84,18 +71,9 @@
             this.label2.TabIndex = 4;
             this.label2.Text = "Location";
             // 
-            // textBox1
-            // 
-            this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(12, 115);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(191, 23);
-            this.textBox1.TabIndex = 5;
-            // 
             // btnRemove
             // 
-            this.btnRemove.DialogResult = System.Windows.Forms.DialogResult.Abort;
-            this.btnRemove.Location = new System.Drawing.Point(12, 143);
+            this.btnRemove.Location = new System.Drawing.Point(12, 297);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(75, 23);
             this.btnRemove.TabIndex = 6;
@@ -103,20 +81,26 @@
             this.btnRemove.UseVisualStyleBackColor = true;
             this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
             // 
-            // FavoriteAdder
+            // bookmarkTree
+            // 
+            this.bookmarkTree.Location = new System.Drawing.Point(12, 115);
+            this.bookmarkTree.Name = "bookmarkTree";
+            this.bookmarkTree.Size = new System.Drawing.Size(191, 176);
+            this.bookmarkTree.TabIndex = 7;
+            // 
+            // BookmarkAdder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(378, 178);
+            this.ClientSize = new System.Drawing.Size(219, 332);
+            this.Controls.Add(this.bookmarkTree);
             this.Controls.Add(this.btnRemove);
-            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtName);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "FavoriteAdder";
+            this.Name = "BookmarkAdder";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add to Favorites";
             this.ResumeLayout(false);
@@ -129,9 +113,8 @@
         private TextBox txtName;
         private Label label1;
         private Button btnSave;
-        private Button btnCancel;
         private Label label2;
-        private TextBox textBox1;
         private Button btnRemove;
+        private TreeView bookmarkTree;
     }
 }

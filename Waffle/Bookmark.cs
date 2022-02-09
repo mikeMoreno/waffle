@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace Waffle
 {
-    internal class Bookmark
+    internal class Bookmark : BookmarkEntity
     {
-        public string Name { get; set; }
-        public string Location{ get; set; }
+        public override string BookmarkEntityType => "Bookmark";
+
+        public string Name { get; set; } = "A";
+
+        public string Url { get; set; }
     }
 }
