@@ -5,7 +5,8 @@ namespace Waffle
     public partial class BookmarkAdder : Form
     {
         private readonly string absoluteUrl;
-        List<BookmarkEntity> BookmarkEntities { get; }
+
+        private List<BookmarkEntity> BookmarkEntities { get; }
 
         public BookmarkAdder(string absoluteUrl)
         {
@@ -16,13 +17,6 @@ namespace Waffle
             this.absoluteUrl = absoluteUrl;
 
             txtName.Text = absoluteUrl;
-
-            var bookmarkFile = Path.Combine(Globals.ApplicationFolder, "bookmarks.json");
-
-            if (!File.Exists(bookmarkFile))
-            {
-                return;
-            }
 
             BookmarkEntities = LoadBookmarks();
 
@@ -39,7 +33,7 @@ namespace Waffle
             }
         }
 
-        private void PopulateBookmarkTree(BookmarkEntity bookmarkEntity)
+        private void PopulateBookmarkTree(BookmarkEntity bookmarkEntity, TreeNode parent = null)
         {
             if (bookmarkEntity is not BookmarkFolder folder)
             {
@@ -51,7 +45,14 @@ namespace Waffle
                     Tag = bookmark,
                 };
 
-                bookmarkTree.Nodes.Add(bookmarkNode);
+                if(parent != null)
+                {
+                    parent.Nodes.Add(bookmarkNode);
+                }
+                else
+                {
+                    bookmarkTree.Nodes.Add(bookmarkNode);
+                }
 
                 return;
             }
@@ -62,20 +63,23 @@ namespace Waffle
                 Tag = folder,
             };
 
-            bookmarkTree.Nodes.Add(folderNode);
+            if(parent != null)
+            {
+                parent.Nodes.Add(folderNode);
+            }
+            else
+            {
+                bookmarkTree.Nodes.Add(folderNode);
+            }
 
             foreach (var childBookmark in folder.BookmarkEntities.OfType<Bookmark>())
             {
-                folderNode.Nodes.Add(new TreeNode()
-                {
-                    Text = childBookmark.Name,
-                    Tag = childBookmark,
-                });
+                PopulateBookmarkTree(childBookmark, folderNode);
             }
 
             foreach (var childFolder in folder.BookmarkEntities.OfType<BookmarkFolder>())
             {
-                PopulateBookmarkTree(childFolder);
+                PopulateBookmarkTree(childFolder, folderNode);
             }
         }
 
@@ -90,16 +94,16 @@ namespace Waffle
                 return;
             }
 
+            var bookmark = new Bookmark()
+            {
+                Name = name,
+                Url = absoluteUrl,
+            };
+
             var selectedNode = bookmarkTree.SelectedNode;
 
             if (selectedNode == null)
             {
-                var bookmark = new Bookmark()
-                {
-                    Name = name,
-                    Url = absoluteUrl,
-                };
-
                 BookmarkEntities.Add(bookmark);
             }
             else
@@ -108,12 +112,6 @@ namespace Waffle
 
                 if (entity.BookmarkEntityType == "BookmarkFolder")
                 {
-                    var bookmark = new Bookmark()
-                    {
-                        Name = name,
-                        Url = absoluteUrl,
-                    };
-
                     var folder = entity as BookmarkFolder;
 
                     folder.BookmarkEntities.Add(bookmark);
@@ -124,22 +122,10 @@ namespace Waffle
 
                     if (parent == null)
                     {
-                        var bookmark = new Bookmark()
-                        {
-                            Name = name,
-                            Url = absoluteUrl,
-                        };
-
                         BookmarkEntities.Add(bookmark);
                     }
                     else
                     {
-                        var bookmark = new Bookmark()
-                        {
-                            Name = name,
-                            Url = absoluteUrl,
-                        };
-
                         var parentFolder = parent.Tag as BookmarkFolder;
 
                         parentFolder.BookmarkEntities.Add(bookmark);
@@ -147,9 +133,7 @@ namespace Waffle
                 }
             }
 
-            SaveBookmarks(BookmarkEntities);
-
-            PopulateBookmarkTree(BookmarkEntities);
+            Close();
         }
 
         private List<BookmarkEntity> LoadBookmarks()
@@ -163,6 +147,11 @@ namespace Waffle
 
             var bookmarkEntities = JsonConvert.DeserializeObject<List<BookmarkEntity>>(File.ReadAllText(bookmarkFile), new BookmarkEntityConverter());
 
+            if (bookmarkEntities == null)
+            {
+                return new List<BookmarkEntity>();
+            }
+
             return bookmarkEntities;
         }
 
@@ -175,43 +164,77 @@ namespace Waffle
             File.WriteAllText(bookmarkFile, serializedBookmarks);
         }
 
-        private void btnRemove_Click(object sender, EventArgs e)
+        private void btnNewFolder_Click(object sender, EventArgs e)
         {
-            //var name = txtName.Text.Trim();
+            bookmarkTree.LabelEdit = true;
 
-            //if (string.IsNullOrWhiteSpace(name))
-            //{
-            //    MessageBox.Show("Name cannot be empty.");
+            var newBookmarkFolder = new BookmarkFolder()
+            {
+                Name = "New Folder",
+            };
 
-            //    return;
-            //}
+            var newFolderNode = new TreeNode()
+            {
+                Text = "New Folder",
+                Tag = newBookmarkFolder,
+            };
 
-            //var bookmarkFile = Path.Combine(Globals.ApplicationFolder, "bookmarks.json");
+            var selectedNode = bookmarkTree.SelectedNode;
 
-            //BookmarkFolder bookmarksFolder;
+            if (selectedNode == null)
+            {
+                bookmarkTree.Nodes.Add(newFolderNode);
 
-            //if (File.Exists(bookmarkFile))
-            //{
-            //    var bookmarksText = File.ReadAllText(bookmarkFile);
-            //    bookmarksFolder = JsonSerializer.Deserialize<BookmarkFolder>(bookmarksText);
-            //}
-            //else
-            //{
-            //    bookmarksFolder = new BookmarkFolder();
-            //}
+                BookmarkEntities.Add(newBookmarkFolder);
+            }
+            else
+            {
+                var entity = selectedNode.Tag as BookmarkEntity;
 
-            //var bookmark = bookmarksFolder.Bookmarks.FirstOrDefault(b => b.Url == absoluteUrl);
+                if (entity.BookmarkEntityType == "BookmarkFolder")
+                {
+                    selectedNode.Nodes.Add(newFolderNode);
 
-            //if (bookmark != null)
-            //{
-            //    bookmarksFolder.Bookmarks.Remove(bookmark);
+                    (entity as BookmarkFolder).BookmarkEntities.Add(newBookmarkFolder);
+                }
+                else
+                {
+                    var parent = selectedNode.Parent;
 
-            //    var serializedBookmarks = JsonSerializer.Serialize(bookmarksFolder, new JsonSerializerOptions() { WriteIndented = true });
+                    if (parent == null)
+                    {
+                        bookmarkTree.Nodes.Add(newFolderNode);
 
-            //    File.WriteAllText(bookmarkFile, serializedBookmarks);
-            //}
+                        BookmarkEntities.Add(newBookmarkFolder);
+                    }
+                    else
+                    {
+                        parent.Nodes.Add(newFolderNode);
 
-            this.Close();
+                        (parent.Tag as BookmarkFolder).BookmarkEntities.Add(newBookmarkFolder);
+                    }
+                }
+            }
+
+            bookmarkTree.SelectedNode = newFolderNode;
+            bookmarkTree.SelectedNode.BeginEdit();
+        }
+
+        private void BookmarkAdder_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            SaveBookmarks(BookmarkEntities);
+        }
+
+        private void bookmarkTree_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
+        {
+            BeginInvoke(new Action(() => afterAfterEdit(e.Node)));
+        }
+
+        private void afterAfterEdit(TreeNode node)
+        {
+            var bookmarkEntity = node.Tag as BookmarkEntity;
+
+            bookmarkEntity.Name = node.Text;
         }
     }
 }

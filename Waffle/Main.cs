@@ -373,8 +373,13 @@ namespace Waffle
 
         private void btnFavorite_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txtUrl.Text))
+            {
+                return;
+            }
+
             using var favAdder = new BookmarkAdder(txtUrl.Text);
-            
+
             var ans = favAdder.ShowDialog();
         }
 
@@ -389,8 +394,15 @@ namespace Waffle
                 }
             };
 
+            bookmarkPanel.LinkClicked += BookmarkPanel_LinkClicked;
+
             Controls.Add(bookmarkPanel);
             bookmarkPanel.BringToFront();
+        }
+
+        private async void BookmarkPanel_LinkClicked(object sender, BookmarkClickedEventArgs e)
+        {
+            await VisitSiteAsync(e.Bookmark.Url);
         }
     }
 }

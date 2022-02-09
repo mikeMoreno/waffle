@@ -59,10 +59,13 @@
             this.bookmarkTree.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.bookmarkTree.LabelEdit = true;
             this.bookmarkTree.Location = new System.Drawing.Point(3, 41);
             this.bookmarkTree.Name = "bookmarkTree";
             this.bookmarkTree.Size = new System.Drawing.Size(417, 491);
             this.bookmarkTree.TabIndex = 3;
+            this.bookmarkTree.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.bookmarkTree_AfterLabelEdit);
+            this.bookmarkTree.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.bookmarkTree_NodeMouseClick);
             // 
             // BookmarkPanel
             // 

@@ -12,7 +12,7 @@ using Waffle.Lib;
 
 namespace Waffle
 {
-    public partial class PageRenderer : UserControl
+    partial class PageRenderer : UserControl
     {
         private ToolTip UnknownEntity { get; }
 

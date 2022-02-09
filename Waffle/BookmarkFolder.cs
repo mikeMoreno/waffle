@@ -10,8 +10,6 @@ namespace Waffle
     {
         public override string BookmarkEntityType => "BookmarkFolder";
 
-        public string Name { get; set; }
-
         public List<BookmarkEntity> BookmarkEntities { get; set; } = new List<BookmarkEntity>();
     }
 }

@@ -32,8 +32,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.btnRemove = new System.Windows.Forms.Button();
             this.bookmarkTree = new System.Windows.Forms.TreeView();
+            this.btnNewFolder = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // txtName
@@ -71,30 +71,31 @@
             this.label2.TabIndex = 4;
             this.label2.Text = "Location";
             // 
-            // btnRemove
-            // 
-            this.btnRemove.Location = new System.Drawing.Point(12, 297);
-            this.btnRemove.Name = "btnRemove";
-            this.btnRemove.Size = new System.Drawing.Size(75, 23);
-            this.btnRemove.TabIndex = 6;
-            this.btnRemove.Text = "Remove";
-            this.btnRemove.UseVisualStyleBackColor = true;
-            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
-            // 
             // bookmarkTree
             // 
             this.bookmarkTree.Location = new System.Drawing.Point(12, 115);
             this.bookmarkTree.Name = "bookmarkTree";
             this.bookmarkTree.Size = new System.Drawing.Size(191, 176);
             this.bookmarkTree.TabIndex = 7;
+            this.bookmarkTree.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.bookmarkTree_AfterLabelEdit);
+            // 
+            // btnNewFolder
+            // 
+            this.btnNewFolder.Location = new System.Drawing.Point(12, 297);
+            this.btnNewFolder.Name = "btnNewFolder";
+            this.btnNewFolder.Size = new System.Drawing.Size(75, 23);
+            this.btnNewFolder.TabIndex = 8;
+            this.btnNewFolder.Text = "New Folder";
+            this.btnNewFolder.UseVisualStyleBackColor = true;
+            this.btnNewFolder.Click += new System.EventHandler(this.btnNewFolder_Click);
             // 
             // BookmarkAdder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(219, 332);
+            this.Controls.Add(this.btnNewFolder);
             this.Controls.Add(this.bookmarkTree);
-            this.Controls.Add(this.btnRemove);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.label1);
@@ -103,6 +104,7 @@
             this.Name = "BookmarkAdder";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add to Favorites";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.BookmarkAdder_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -114,7 +116,7 @@
         private Label label1;
         private Button btnSave;
         private Label label2;
-        private Button btnRemove;
         private TreeView bookmarkTree;
+        private Button btnNewFolder;
     }
 }

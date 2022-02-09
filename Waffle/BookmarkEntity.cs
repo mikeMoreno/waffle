@@ -10,6 +10,8 @@ namespace Waffle
     [JsonConverter(typeof(BookmarkEntityConverter))]
     internal abstract class BookmarkEntity
     {
+        public string Name { get; set; }
+
         public abstract string BookmarkEntityType { get; }
     }
 }
