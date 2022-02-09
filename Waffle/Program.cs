@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Waffle.History;
 using Waffle.Lib;
 
 namespace Waffle
@@ -13,15 +14,16 @@ namespace Waffle
         /// </summary>
         [STAThread]
         static void Main(string[] args)
-        {   
+        {
             ApplicationConfiguration.Initialize();
-            
+
             CliArgs = args;
 
-            SetupApplicationFolder();
+            SetupApplicationFolders();
 
             using IHost host = Host.CreateDefaultBuilder()
                 .ConfigureServices((_, services) => services
+                            .AddSingleton<HistoryService>()
                             .AddSingleton<WaffleLib>()
                             .AddSingleton<Main>())
                             .Build();
@@ -34,12 +36,19 @@ namespace Waffle
             }
         }
 
-        private static void SetupApplicationFolder()
+        private static void SetupApplicationFolders()
         {
             if (!Directory.Exists(Globals.ApplicationFolder))
             {
                 Directory.CreateDirectory(Globals.ApplicationFolder);
             }
+
+            if (!Directory.Exists(Globals.HistoryFolder))
+            {
+                Directory.CreateDirectory(Globals.HistoryFolder);
+            }
         }
     }
 }
+
+// TODO: all classes that can be: make internal

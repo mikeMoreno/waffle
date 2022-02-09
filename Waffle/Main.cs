@@ -1,21 +1,22 @@
+using Waffle.History;
 using Waffle.Lib;
 
 namespace Waffle
 {
-    public partial class Main : Form
+    partial class Main : Form
     {
         private WaffleLib WaffleLib { get; }
 
-        public Main(WaffleLib waffleLib)
+        private HistoryService HistoryService { get; }
+
+        public Main(WaffleLib waffleLib, HistoryService historyService)
         {
             InitializeComponent();
 
             WaffleLib = waffleLib;
+            HistoryService = historyService;
 
-            var pageRenderer = BuildPageRenderer(WaffleLib);
-
-            var defaultTab = tabSitePages.TabPages[0];
-            defaultTab.Controls.Add(pageRenderer);
+            SpawnNewTab();
 
             tabSitePages.SelectedIndexChanged += TabSitePages_SelectedIndexChanged;
 
@@ -79,7 +80,7 @@ namespace Waffle
         {
             var pageRenderer = BuildPageRenderer(WaffleLib);
 
-            var tabPage = new TabPage
+            var tabPage = new RequestTab
             {
                 Text = "New Tab",
                 BackColor = Color.White,
@@ -87,7 +88,16 @@ namespace Waffle
 
             tabPage.Controls.Add(pageRenderer);
 
+            /*
+             * This call is necessary because of a WinForms bug :D 
+             * More information can be found here:
+             * https://github.com/dotnet/winforms/issues/3686
+             * https://stackoverflow.com/questions/1532301/visual-studio-tabcontrol-tabpages-insert-not-working
+             */
+            _ = tabSitePages.Handle;
+
             tabSitePages.TabPages.Insert(tabSitePages.TabPages.Count - 1, tabPage);
+
             tabSitePages.SelectedTab = tabPage;
 
             btnBack.Enabled = false;
@@ -141,7 +151,7 @@ namespace Waffle
 
             var itemType = WaffleLib.GetItemType(absoluteUrl);
 
-            var selectedTab = tabSitePages.SelectedTab;
+            var selectedTab = tabSitePages.SelectedTab as RequestTab;
 
             var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().Single();
 
@@ -155,6 +165,8 @@ namespace Waffle
             }
 
             btnBack.Enabled = true;
+
+            HistoryService.AddUrl(selectedTab.Key, absoluteUrl);
 
             await RenderUrlAsync(absoluteUrl, itemType);
         }

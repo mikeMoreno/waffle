@@ -23,9 +23,7 @@ namespace Waffle
         {
             InitializeComponent();
 
-            var bookmarkFile = Path.Combine(Globals.ApplicationFolder, "bookmarks.json");
-
-            if (!File.Exists(bookmarkFile))
+            if (!File.Exists(Globals.BookmarksFile))
             {
                 return;
             }
@@ -97,14 +95,12 @@ namespace Waffle
 
         private List<BookmarkEntity> LoadBookmarks()
         {
-            var bookmarkFile = Path.Combine(Globals.ApplicationFolder, "bookmarks.json");
-
-            if (!File.Exists(bookmarkFile))
+            if (!File.Exists(Globals.BookmarksFile))
             {
                 return new List<BookmarkEntity>();
             }
 
-            var bookmarkEntities = JsonConvert.DeserializeObject<List<BookmarkEntity>>(File.ReadAllText(bookmarkFile), new BookmarkEntityConverter());
+            var bookmarkEntities = JsonConvert.DeserializeObject<List<BookmarkEntity>>(File.ReadAllText(Globals.BookmarksFile), new BookmarkEntityConverter());
 
             if (bookmarkEntities == null)
             {
@@ -118,9 +114,7 @@ namespace Waffle
         {
             var serializedBookmarks = JsonConvert.SerializeObject(bookmarkEntities, Formatting.Indented);
 
-            var bookmarkFile = Path.Combine(Globals.ApplicationFolder, "bookmarks.json");
-
-            File.WriteAllText(bookmarkFile, serializedBookmarks);
+            File.WriteAllText(Globals.BookmarksFile, serializedBookmarks);
         }
 
         private void btnClose_Click(object sender, EventArgs e)

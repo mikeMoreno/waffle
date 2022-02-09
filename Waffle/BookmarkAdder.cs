@@ -138,14 +138,12 @@ namespace Waffle
 
         private List<BookmarkEntity> LoadBookmarks()
         {
-            var bookmarkFile = Path.Combine(Globals.ApplicationFolder, "bookmarks.json");
-
-            if (!File.Exists(bookmarkFile))
+            if (!File.Exists(Globals.BookmarksFile))
             {
                 return new List<BookmarkEntity>();
             }
 
-            var bookmarkEntities = JsonConvert.DeserializeObject<List<BookmarkEntity>>(File.ReadAllText(bookmarkFile), new BookmarkEntityConverter());
+            var bookmarkEntities = JsonConvert.DeserializeObject<List<BookmarkEntity>>(File.ReadAllText(Globals.BookmarksFile), new BookmarkEntityConverter());
 
             if (bookmarkEntities == null)
             {
