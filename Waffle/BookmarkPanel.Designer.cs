@@ -28,9 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btnClose = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.bookmarkTree = new System.Windows.Forms.TreeView();
+            this.bookmarkPanelContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.btnDelete = new System.Windows.Forms.ToolStripMenuItem();
+            this.bookmarkPanelContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnClose
@@ -59,6 +63,7 @@
             this.bookmarkTree.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.bookmarkTree.ContextMenuStrip = this.bookmarkPanelContextMenu;
             this.bookmarkTree.LabelEdit = true;
             this.bookmarkTree.Location = new System.Drawing.Point(3, 41);
             this.bookmarkTree.Name = "bookmarkTree";
@@ -66,6 +71,20 @@
             this.bookmarkTree.TabIndex = 3;
             this.bookmarkTree.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.bookmarkTree_AfterLabelEdit);
             this.bookmarkTree.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.bookmarkTree_NodeMouseClick);
+            // 
+            // bookmarkPanelContextMenu
+            // 
+            this.bookmarkPanelContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnDelete});
+            this.bookmarkPanelContextMenu.Name = "bookmarkPanelContextMenu";
+            this.bookmarkPanelContextMenu.Size = new System.Drawing.Size(108, 26);
+            // 
+            // btnDelete
+            // 
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(107, 22);
+            this.btnDelete.Text = "Delete";
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // BookmarkPanel
             // 
@@ -76,6 +95,7 @@
             this.Controls.Add(this.btnClose);
             this.Name = "BookmarkPanel";
             this.Size = new System.Drawing.Size(420, 532);
+            this.bookmarkPanelContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -86,5 +106,7 @@
         private Button btnClose;
         private Label label1;
         private TreeView bookmarkTree;
+        private ContextMenuStrip bookmarkPanelContextMenu;
+        private ToolStripMenuItem btnDelete;
     }
 }

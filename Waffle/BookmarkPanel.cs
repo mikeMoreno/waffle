@@ -151,7 +151,7 @@ namespace Waffle
         {
             var node = e.Node;
 
-            if((node.Tag as BookmarkEntity).BookmarkEntityType != "Bookmark")
+            if ((node.Tag as BookmarkEntity).BookmarkEntityType != "Bookmark")
             {
                 return;
             }
@@ -159,6 +159,22 @@ namespace Waffle
             var bookmark = node.Tag as Bookmark;
 
             LinkClicked?.Invoke(this, new BookmarkClickedEventArgs(bookmark));
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            var selectedNode = bookmarkTree.SelectedNode;
+
+            if (selectedNode == null)
+            {
+                return;
+            }
+
+            BookmarkEntities.Remove(selectedNode.Tag as BookmarkEntity);
+
+            bookmarkTree.Nodes.Remove(selectedNode);
+
+            SaveBookmarks(BookmarkEntities);
         }
     }
 }
