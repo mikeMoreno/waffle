@@ -207,5 +207,57 @@ namespace Waffle
                 }
             }
         }
+
+        private void btnAddBookmark_Click(object sender, EventArgs e)
+        {
+            var newBookmark = new Bookmark();
+
+            using (var bookmarkEditor = new BookmarkEditor(newBookmark))
+            {
+                bookmarkEditor.Text = "Add Bookmark";
+
+                var ans = bookmarkEditor.ShowDialog();
+
+                if (ans != DialogResult.OK)
+                {
+                    return;
+                }
+
+                newBookmark.Name = bookmarkEditor.BookmarkName;
+                newBookmark.Url = bookmarkEditor.BookmarkUrl;
+
+                var selectedNode = bookmarkTree.SelectedNode;
+
+                if (selectedNode == null)
+                {
+                    BookmarkEntities.Add(newBookmark);
+                }
+                else
+                {
+                    var bookmarkEntity = selectedNode.Tag as BookmarkEntity;
+
+                    if (bookmarkEntity is BookmarkFolder folder)
+                    {
+                        folder.BookmarkEntities.Add(newBookmark);
+                    }
+                    else
+                    {
+                        var parent = selectedNode.Parent;
+
+                        if (parent == null)
+                        {
+                            BookmarkEntities.Add(newBookmark);
+                        }
+                        else
+                        {
+                            (parent.Tag as BookmarkFolder).BookmarkEntities.Add(newBookmark);
+                        }
+                    }
+                }
+            }
+
+            PopulateBookmarkTree(BookmarkEntities);
+            SaveBookmarks(BookmarkEntities);
+        }
     }
 }
