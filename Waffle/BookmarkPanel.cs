@@ -214,7 +214,7 @@ namespace Waffle
 
             using (var bookmarkEditor = new BookmarkEditor(newBookmark))
             {
-                bookmarkEditor.Text = "Add Bookmark";
+                bookmarkEditor.Text = "Add";
 
                 var ans = bookmarkEditor.ShowDialog();
 
@@ -251,6 +251,57 @@ namespace Waffle
                         else
                         {
                             (parent.Tag as BookmarkFolder).BookmarkEntities.Add(newBookmark);
+                        }
+                    }
+                }
+            }
+
+            PopulateBookmarkTree(BookmarkEntities);
+            SaveBookmarks(BookmarkEntities);
+        }
+
+        private void btnAddFolder_Click(object sender, EventArgs e)
+        {
+            var newFolder = new BookmarkFolder();
+
+            using (var bookmarkEditor = new BookmarkEditor(newFolder))
+            {
+                bookmarkEditor.Text = "Add";
+
+                var ans = bookmarkEditor.ShowDialog();
+
+                if (ans != DialogResult.OK)
+                {
+                    return;
+                }
+
+                newFolder.Name = bookmarkEditor.BookmarkName;
+
+                var selectedNode = bookmarkTree.SelectedNode;
+
+                if (selectedNode == null)
+                {
+                    BookmarkEntities.Add(newFolder);
+                }
+                else
+                {
+                    var bookmarkEntity = selectedNode.Tag as BookmarkEntity;
+
+                    if (bookmarkEntity is BookmarkFolder folder)
+                    {
+                        folder.BookmarkEntities.Add(newFolder);
+                    }
+                    else
+                    {
+                        var parent = selectedNode.Parent;
+
+                        if (parent == null)
+                        {
+                            BookmarkEntities.Add(newFolder);
+                        }
+                        else
+                        {
+                            (parent.Tag as BookmarkFolder).BookmarkEntities.Add(newFolder);
                         }
                     }
                 }

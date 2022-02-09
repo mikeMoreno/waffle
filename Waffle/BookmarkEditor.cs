@@ -32,6 +32,7 @@ namespace Waffle
             }
             else
             {
+                lblUrl.Visible = false;
                 txtUrl.Visible = false;
             }
         }

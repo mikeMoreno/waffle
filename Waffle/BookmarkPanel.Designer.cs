@@ -36,6 +36,7 @@
             this.btnAddBookmark = new System.Windows.Forms.ToolStripMenuItem();
             this.btnEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.btnDelete = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnAddFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.bookmarkPanelContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -77,31 +78,39 @@
             // 
             this.bookmarkPanelContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnAddBookmark,
+            this.btnAddFolder,
             this.btnEdit,
             this.btnDelete});
             this.bookmarkPanelContextMenu.Name = "bookmarkPanelContextMenu";
-            this.bookmarkPanelContextMenu.Size = new System.Drawing.Size(108, 70);
+            this.bookmarkPanelContextMenu.Size = new System.Drawing.Size(181, 114);
             // 
             // btnAddBookmark
             // 
             this.btnAddBookmark.Name = "btnAddBookmark";
-            this.btnAddBookmark.Size = new System.Drawing.Size(107, 22);
-            this.btnAddBookmark.Text = "Add";
+            this.btnAddBookmark.Size = new System.Drawing.Size(180, 22);
+            this.btnAddBookmark.Text = "Add Bookmark";
             this.btnAddBookmark.Click += new System.EventHandler(this.btnAddBookmark_Click);
             // 
             // btnEdit
             // 
             this.btnEdit.Name = "btnEdit";
-            this.btnEdit.Size = new System.Drawing.Size(107, 22);
+            this.btnEdit.Size = new System.Drawing.Size(180, 22);
             this.btnEdit.Text = "Edit";
             this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
             // 
             // btnDelete
             // 
             this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(107, 22);
+            this.btnDelete.Size = new System.Drawing.Size(180, 22);
             this.btnDelete.Text = "Delete";
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // btnAddFolder
+            // 
+            this.btnAddFolder.Name = "btnAddFolder";
+            this.btnAddFolder.Size = new System.Drawing.Size(180, 22);
+            this.btnAddFolder.Text = "Add Folder";
+            this.btnAddFolder.Click += new System.EventHandler(this.btnAddFolder_Click);
             // 
             // BookmarkPanel
             // 
@@ -127,5 +136,6 @@
         private ToolStripMenuItem btnDelete;
         private ToolStripMenuItem btnEdit;
         private ToolStripMenuItem btnAddBookmark;
+        private ToolStripMenuItem btnAddFolder;
     }
 }

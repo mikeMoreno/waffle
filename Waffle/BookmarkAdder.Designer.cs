@@ -103,7 +103,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "BookmarkAdder";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Add to Favorites";
+            this.Text = "Add";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.BookmarkAdder_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
