@@ -62,11 +62,11 @@ namespace Waffle
             }
             else
             {
-                if (pageRenderer.VisitedUrls.TryPeek(out (string currentUrl, ItemType _) result))
+                if (pageRenderer.VisitedUrls.TryPeek(out SelectorLine line))
                 {
-                    if (result.currentUrl != "<home>")
+                    if (line.GetLink() != "<home>")
                     {
-                        txtUrl.Text = result.currentUrl;
+                        txtUrl.Text = line.GetLink();
                     }
                 }
                 else
@@ -108,13 +108,16 @@ namespace Waffle
         private void PageRenderer_LinkClicked(object sender, LinkClickedEventArgs e)
         {
             var pageRenderer = sender as PageRenderer;
-            pageRenderer.VisitedUrls.Push((txtUrl.Text.Trim(), pageRenderer.CurrentPageType));
+            pageRenderer.VisitedUrls.Push(new LinkLine(txtUrl.Text.Trim())
+            {
+                ItemType = pageRenderer.CurrentPageType,
+            });
 
-            txtUrl.Text = e.Link;
+            txtUrl.Text = e.SelectorLine.GetLink();
 
             btnBack.Enabled = true;
 
-            Text = $"Waffle - {e.ItemType}";
+            Text = $"Waffle - {e.SelectorLine.ItemType}";
         }
 
         private void PageRenderer_ViewingSource(object sender, ViewSourceEventArgs e)
@@ -149,7 +152,7 @@ namespace Waffle
 
             txtUrl.Text = absoluteUrl;
 
-            var itemType = WaffleLib.GetItemType(absoluteUrl);
+            var linkLine = new LinkLine(absoluteUrl);
 
             var selectedTab = tabSitePages.SelectedTab as RequestTab;
 
@@ -157,18 +160,21 @@ namespace Waffle
 
             if (!pageRenderer.VisitedUrls.Any())
             {
-                pageRenderer.VisitedUrls.Push(("<home>", ItemType.Unknown));
+                pageRenderer.VisitedUrls.Push(new LinkLine("<home>"));
             }
             else
             {
-                pageRenderer.VisitedUrls.Push((txtUrl.Text.Trim(), pageRenderer.CurrentPageType));
+                pageRenderer.VisitedUrls.Push(new LinkLine(txtUrl.Text.Trim())
+                {
+                    ItemType = pageRenderer.CurrentPageType,
+                });
             }
 
             btnBack.Enabled = true;
 
             HistoryService.AddUrl(selectedTab.Key, absoluteUrl);
 
-            await RenderUrlAsync(absoluteUrl, itemType);
+            await RenderUrlAsync(linkLine);
         }
 
         private async void btnBack_Click(object sender, EventArgs e)
@@ -176,7 +182,9 @@ namespace Waffle
             var selectedTab = tabSitePages.SelectedTab;
             var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().Single();
 
-            var (lastVisitedUrl, itemType) = pageRenderer.VisitedUrls.Pop();
+            var selectorLine = pageRenderer.VisitedUrls.Pop();
+
+            var lastVisitedUrl = selectorLine.GetLink();
 
             if (lastVisitedUrl != "<home>")
             {
@@ -199,81 +207,45 @@ namespace Waffle
             }
             else
             {
-                await RenderUrlAsync(txtUrl.Text, itemType);
+                await RenderUrlAsync(selectorLine);
             }
         }
 
-        private async Task RenderUrlAsync(string absoluteUrl, ItemType itemType)
+        private async Task RenderUrlAsync(SelectorLine selectorLine)
         {
             var selectedTab = tabSitePages.SelectedTab;
             var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().Single();
 
-            absoluteUrl = absoluteUrl.Trim();
+            var response = await WaffleLib.GetAsync(selectorLine);
 
-            if (itemType == ItemType.Unknown)
+            if (!response.IsSuccess)
             {
-                itemType = AttemptToGuessItemType(absoluteUrl, itemType);
+                MessageBox.Show(response.ErrorMessage);
+
+                return;
             }
 
-            switch (itemType)
+            Text = $"Waffle - {response.GetType().Name.Replace("Response", "")}";
+
+            switch (response)
             {
-                case ItemType.Menu:
-                    Text = $"Waffle - {itemType}";
-                    pageRenderer.Render(await WaffleLib.GetMenuAsync(absoluteUrl));
+                case MenuResponse menuResponse:
+                    pageRenderer.Render(menuResponse);
                     break;
-                case ItemType.Text:
-                    Text = $"Waffle - {itemType}";
-                    pageRenderer.Render(await WaffleLib.GetTextFileAsync(absoluteUrl));
+                case TextResponse textResponse:
+                    pageRenderer.Render(textResponse);
                     break;
-                case ItemType.PNG:
-                    Text = $"Waffle - {itemType}";
-                    pageRenderer.Render(await WaffleLib.GetPngFileAsync(absoluteUrl));
+                case PngResponse pngResponse:
+                    pageRenderer.Render(pngResponse);
                     break;
-                case ItemType.Image:
-                    Text = $"Waffle - {itemType}";
-                    pageRenderer.Render(await WaffleLib.GetImageFileAsync(absoluteUrl));
+                case ImageResponse imageResponse:
+                    pageRenderer.Render(imageResponse);
                     break;
                 default:
                     Text = "Waffle";
-                    pageRenderer.Render(await WaffleLib.GetMenuAsync(absoluteUrl));
+                    pageRenderer.Render(response as MenuResponse);
                     break;
             }
-        }
-
-        private ItemType AttemptToGuessItemType(string absoluteUrl, ItemType itemType)
-        {
-            if (itemType != ItemType.Unknown)
-            {
-                // No Need to guess.
-                return itemType;
-            }
-
-            if (absoluteUrl.EndsWith(".jpg"))
-            {
-                return ItemType.Image;
-            }
-
-            if (absoluteUrl.EndsWith(".png"))
-            {
-                return ItemType.PNG;
-            }
-
-            if (absoluteUrl.EndsWith(".tar.gz"))
-            {
-                return ItemType.BinaryFile;
-            }
-
-            if (absoluteUrl.EndsWith(".zip"))
-            {
-                return ItemType.BinaryFile;
-            }
-
-            if (absoluteUrl.EndsWith(".txt"))
-            {
-                return ItemType.Text;
-            }
-
-            return ItemType.Unknown;
         }
 
         private void txtUrl_Leave(object sender, EventArgs e)

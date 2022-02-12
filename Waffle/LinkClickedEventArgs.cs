@@ -9,14 +9,21 @@ namespace Waffle
 {
     class LinkClickedEventArgs : EventArgs
     {
-        public string Link { get; }
+        public SelectorLine SelectorLine { get; }
 
-        public ItemType ItemType { get; }
+        //public string Link { get; }
 
-        public LinkClickedEventArgs(string link, ItemType itemType)
+        //public ItemType ItemType { get; }
+
+        //public LinkClickedEventArgs(string link, ItemType itemType)
+        //{
+        //    Link = link;
+        //    ItemType = itemType;
+        //}
+
+        public LinkClickedEventArgs(SelectorLine selectorLine)
         {
-            Link = link;
-            ItemType = itemType;
+            SelectorLine = selectorLine;
         }
     }
 }

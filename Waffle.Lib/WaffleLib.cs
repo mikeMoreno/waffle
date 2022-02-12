@@ -11,48 +11,78 @@ namespace Waffle.Lib
 {
     public class WaffleLib
     {
-        public async Task<Response> GetAsync<T>(string absoluteUrl) where T : Response
+        public async Task<Response> GetAsync(string absoluteUrl)
         {
-            var responseType = GetItemType(absoluteUrl);
+            // TODO: until / if we can just pass around SelectorLines / LinkLines
+            var itemType = SelectorLine.GetItemType(absoluteUrl);
 
-            return responseType switch
+            return itemType switch
             {
                 ItemType.Menu => await GetMenuAsync(absoluteUrl),
                 ItemType.Text => await GetTextFileAsync(absoluteUrl),
                 ItemType.PNG => await GetPngFileAsync(absoluteUrl),
-                _ => throw new InvalidOperationException($"Unknown link type: {absoluteUrl}"),
+                _ => await GetMenuAsync(absoluteUrl),
+            };
+        }
+
+        public async Task<Response> GetAsync(SelectorLine selectorLine)
+        {
+            var link = selectorLine.GetLink();
+
+            return selectorLine.ItemType switch
+            {
+                ItemType.Menu => await GetMenuAsync(link),
+                ItemType.Text => await GetTextFileAsync(link),
+                ItemType.PNG => await GetPngFileAsync(link),
+                _ => await GetMenuAsync(link),
             };
         }
 
         public async Task<MenuResponse> GetMenuAsync(string absoluteUrl)
         {
-            ValidateUrl(absoluteUrl);
+            UrlValidator.ValidateUrl(absoluteUrl);
 
-            var parsedUrl = ParseUrl(absoluteUrl);
+            var parsedUrl = UrlValidator.ParseUrl(absoluteUrl);
 
             using var reader = new GopherStreamReader();
 
-            await reader.OpenAsync(parsedUrl);
-
-            var lines = await reader.ReadAllLinesAsync();
-
-            return new MenuResponse()
+            try
             {
-                Lines = lines.Select(line => new SelectorLine(line)).ToArray(),
-            };
+                await reader.OpenAsync(parsedUrl);
+
+                var lines = await reader.ReadAllLinesAsync();
+
+                return new MenuResponse()
+                {
+                    Lines = lines.Select(line => new SelectorLine(line)).ToArray(),
+                };
+            }
+            catch (Exception e)
+            {
+                return Response.Error<MenuResponse>(e);
+            }
         }
 
         public async Task<TextResponse> GetTextFileAsync(string absoluteUrl)
         {
-            ValidateUrl(absoluteUrl);
+            UrlValidator.ValidateUrl(absoluteUrl);
 
-            var parsedUrl = ParseUrl(absoluteUrl);
+            var parsedUrl = UrlValidator.ParseUrl(absoluteUrl);
 
             using var reader = new GopherStreamReader();
 
-            await reader.OpenAsync(parsedUrl);
+            string[] lines;
 
-            var lines = await reader.ReadAllLinesAsync();
+            try
+            {
+                await reader.OpenAsync(parsedUrl);
+
+                lines = await reader.ReadAllLinesAsync();
+            }
+            catch (Exception e)
+            {
+                return Response.Error<TextResponse>(e);
+            }
 
             var fileContents = new StringBuilder();
 
@@ -72,149 +102,75 @@ namespace Waffle.Lib
 
         public async Task<PngResponse> GetPngFileAsync(string absoluteUrl)
         {
-            ValidateUrl(absoluteUrl);
+            UrlValidator.ValidateUrl(absoluteUrl);
 
-            var parsedUrl = ParseUrl(absoluteUrl);
+            var parsedUrl = UrlValidator.ParseUrl(absoluteUrl);
 
             using var reader = new GopherStreamReader();
 
-            await reader.OpenAsync(parsedUrl);
-
-            var bytes = await reader.ReadAllBytesAsync();
-
-            return new PngResponse()
+            try
             {
-                Image = Image.FromStream(new MemoryStream(bytes)),
-            };
+                await reader.OpenAsync(parsedUrl);
+
+                var bytes = await reader.ReadAllBytesAsync();
+
+                return new PngResponse()
+                {
+                    Image = Image.FromStream(new MemoryStream(bytes)),
+                };
+            }
+            catch (Exception e)
+            {
+                return Response.Error<PngResponse>(e);
+            }
         }
 
         public async Task<ImageResponse> GetImageFileAsync(string absoluteUrl)
         {
-            ValidateUrl(absoluteUrl);
+            UrlValidator.ValidateUrl(absoluteUrl);
 
-            var parsedUrl = ParseUrl(absoluteUrl);
+            var parsedUrl = UrlValidator.ParseUrl(absoluteUrl);
 
             using var reader = new GopherStreamReader();
 
-            await reader.OpenAsync(parsedUrl);
-
-            var bytes = await reader.ReadAllBytesAsync();
-
-            return new ImageResponse()
+            try
             {
-                Image = Image.FromStream(new MemoryStream(bytes)),
-            };
+                await reader.OpenAsync(parsedUrl);
+
+                var bytes = await reader.ReadAllBytesAsync();
+
+                return new ImageResponse()
+                {
+                    Image = Image.FromStream(new MemoryStream(bytes)),
+                };
+            }
+            catch (Exception e)
+            {
+                return Response.Error<ImageResponse>(e);
+            }
         }
 
         public async Task<BinaryResponse> GetBinaryFile(string absoluteUrl)
         {
-            ValidateUrl(absoluteUrl);
+            UrlValidator.ValidateUrl(absoluteUrl);
 
-            var parsedUrl = ParseUrl(absoluteUrl);
+            var parsedUrl = UrlValidator.ParseUrl(absoluteUrl);
 
             using var reader = new GopherStreamReader();
 
-            await reader.OpenAsync(parsedUrl);
-
-            return new BinaryResponse()
+            try
             {
-                Bytes = await reader.ReadAllBytesAsync(),
-            };
-        }
+                await reader.OpenAsync(parsedUrl);
 
-        public ItemType GetItemType(string absoluteUrl)
-        {
-            ValidateUrl(absoluteUrl);
-
-            var parsedUrl = ParseUrl(absoluteUrl);
-
-            var itemType = ParseItemType(parsedUrl);
-
-            if (itemType == "0")
-            {
-                return ItemType.Text;
+                return new BinaryResponse()
+                {
+                    Bytes = await reader.ReadAllBytesAsync(),
+                };
             }
-            else if (itemType == "1")
+            catch (Exception e)
             {
-                return ItemType.Menu;
+                return Response.Error<BinaryResponse>(e);
             }
-            else if (itemType == "p")
-            {
-                return ItemType.PNG;
-            }
-            else if (itemType == "I")
-            {
-                return ItemType.Image;
-            }
-            else if (itemType == "9")
-            {
-                return ItemType.BinaryFile;
-            }
-            else
-            {
-                return ItemType.Unknown;
-            }
-        }
-
-        private static string ParseItemType(string absoluteUrl)
-        {
-            string path = null;
-
-            if (absoluteUrl.Contains('/'))
-            {
-                path = absoluteUrl[(absoluteUrl.IndexOf('/') + 1)..];
-            }
-
-            if (path == null)
-            {
-                return null;
-            }
-
-            if (path.Length <= 1)
-            {
-                return path;
-            }
-
-            if (!path.Contains('/'))
-            {
-                return path;
-            }
-
-            if (path[..path.IndexOf('/')].Length == 1)
-            {
-                path = path[..path.IndexOf('/')];
-            }
-
-            return path;
-        }
-
-        private static void ValidateUrl(string url)
-        {
-            ArgumentNullException.ThrowIfNull(url);
-
-            if (url.Trim() == "")
-            {
-                throw new InvalidOperationException("Empty url not allowed.");
-            }
-        }
-
-        private static string ParseUrl(string url)
-        {
-            const string Protocol = "gopher://";
-
-            url = url.Trim();
-
-            if (url.StartsWith(Protocol))
-            {
-                url = url[(url.IndexOf(Protocol) + Protocol.Length)..];
-            }
-
-            if (url.EndsWith("/"))
-            {
-                url = url[0..^1];
-            }
-
-            return url;
         }
     }
 }

@@ -9,6 +9,5 @@ namespace Waffle.Lib
     public class MenuResponse : Response
     {
         public SelectorLine[] Lines { get; set; }
-
     }
 }

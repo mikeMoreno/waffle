@@ -22,9 +22,9 @@ namespace Waffle.Lib
         Info,
         SoundFile,
         PNG,
-
+        
+        Unknown,
         Home,
         GopherSourceCode,
-        Unknown,
     }
 }

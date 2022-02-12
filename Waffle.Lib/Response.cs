@@ -8,6 +8,17 @@ namespace Waffle.Lib
 {
     public abstract class Response
     {
-        //public ResponseType ResponseType { get; set; }
+        public bool IsSuccess { get; set; } = true;
+
+        public string ErrorMessage { get; set; }
+
+        internal static T Error<T>(Exception e) where T : Response, new()
+        {
+            return new T()
+            {
+                IsSuccess = false,
+                ErrorMessage = e.Message,
+            };
+        }
     }
 }
