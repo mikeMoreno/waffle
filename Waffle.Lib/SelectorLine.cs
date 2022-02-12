@@ -101,8 +101,6 @@ namespace Waffle.Lib
 
         protected static ItemType GetItemType(string absoluteUrl)
         {
-            UrlValidator.ValidateUrl(absoluteUrl);
-
             var parsedUrl = UrlValidator.ParseUrl(absoluteUrl);
 
             var itemType = ParseItemType(parsedUrl);

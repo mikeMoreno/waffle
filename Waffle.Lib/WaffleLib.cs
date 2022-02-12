@@ -28,8 +28,6 @@ namespace Waffle.Lib
 
         private async Task<MenuResponse> GetMenuAsync(string absoluteUrl)
         {
-            UrlValidator.ValidateUrl(absoluteUrl);
-
             var parsedUrl = UrlValidator.ParseUrl(absoluteUrl);
 
             using var reader = new GopherStreamReader();
@@ -53,8 +51,6 @@ namespace Waffle.Lib
 
         private async Task<TextResponse> GetTextFileAsync(string absoluteUrl)
         {
-            UrlValidator.ValidateUrl(absoluteUrl);
-
             var parsedUrl = UrlValidator.ParseUrl(absoluteUrl);
 
             using var reader = new GopherStreamReader();
@@ -90,8 +86,6 @@ namespace Waffle.Lib
 
         private async Task<PngResponse> GetPngFileAsync(string absoluteUrl)
         {
-            UrlValidator.ValidateUrl(absoluteUrl);
-
             var parsedUrl = UrlValidator.ParseUrl(absoluteUrl);
 
             using var reader = new GopherStreamReader();
@@ -115,8 +109,6 @@ namespace Waffle.Lib
 
         private async Task<ImageResponse> GetImageFileAsync(string absoluteUrl)
         {
-            UrlValidator.ValidateUrl(absoluteUrl);
-
             var parsedUrl = UrlValidator.ParseUrl(absoluteUrl);
 
             using var reader = new GopherStreamReader();
@@ -140,8 +132,6 @@ namespace Waffle.Lib
 
         private async Task<BinaryResponse> GetBinaryFile(string absoluteUrl)
         {
-            UrlValidator.ValidateUrl(absoluteUrl);
-
             var parsedUrl = UrlValidator.ParseUrl(absoluteUrl);
 
             using var reader = new GopherStreamReader();
