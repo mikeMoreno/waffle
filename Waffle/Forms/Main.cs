@@ -157,6 +157,8 @@ namespace Waffle.Forms
 
             var selectedTab = tabSitePages.SelectedTab as RequestTab;
 
+            selectedTab.Text = linkLine.GetUserFriendlyName();
+
             var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().Single();
 
             if (!pageRenderer.VisitedUrls.Any())
@@ -363,7 +365,10 @@ namespace Waffle.Forms
                 return;
             }
 
-            using var favAdder = new BookmarkAdder(txtUrl.Text);
+            using var favAdder = new BookmarkAdder(new LinkLine(txtUrl.Text)
+            {
+
+            });
 
             var ans = favAdder.ShowDialog();
         }

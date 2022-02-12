@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Waffle.Lib;
 
 namespace Waffle.Forms
 {
@@ -8,27 +9,19 @@ namespace Waffle.Forms
 
         private List<BookmarkEntity> BookmarkEntities { get; }
 
-        public BookmarkAdder(string absoluteUrl)
+        public BookmarkAdder(LinkLine linkLine)
         {
             InitializeComponent();
 
             absoluteUrl = absoluteUrl.Trim();
 
-            this.absoluteUrl = absoluteUrl;
+            this.absoluteUrl = linkLine.Raw;
 
-            txtName.Text = GetUserFriendlyName(absoluteUrl);
+            txtName.Text = linkLine.GetUserFriendlyName();
 
             BookmarkEntities = LoadBookmarks();
 
             PopulateBookmarkTree(BookmarkEntities);
-        }
-
-        private static string GetUserFriendlyName(string absoluteUrl)
-        {
-            absoluteUrl = absoluteUrl.Replace("gopher://", "");
-            absoluteUrl = absoluteUrl.TrimEnd('/');
-
-            return absoluteUrl;
         }
 
         private void PopulateBookmarkTree(List<BookmarkEntity> bookmarkEntities)
