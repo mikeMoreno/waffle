@@ -1,3 +1,4 @@
+using Waffle.Bookmarks;
 using Waffle.History;
 using Waffle.Lib;
 using Waffle.UserControls;
