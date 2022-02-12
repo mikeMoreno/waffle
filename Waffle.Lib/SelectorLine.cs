@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,18 +10,23 @@ namespace Waffle.Lib
 {
     public record SelectorLine
     {
-        public string Raw { get; protected set; }
+        public string Raw { get; set; }
 
-        public string DisplayString { get; protected set; }
+        public string DisplayString { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public ItemType ItemType { get; set; }
 
-        public string Selector { get; protected set; }
+        public string Selector { get; set; }
 
-        public string HostName { get; protected set; }
+        public string HostName { get; set; }
 
-        public int Port { get; protected set; }
+        public int Port { get; set; }
 
+        public SelectorLine()
+        {
+
+        }
 
         public SelectorLine(string line)
         {
@@ -57,15 +64,9 @@ namespace Waffle.Lib
 
         public virtual string GetLink()
         {
-            if (ItemType != ItemType.Text &&
-                ItemType != ItemType.Menu &&
-                ItemType != ItemType.Search &&
-                ItemType != ItemType.PNG &&
-                ItemType != ItemType.Image &&
-                ItemType != ItemType.BinaryFile
-            )
+            if(string.IsNullOrWhiteSpace(HostName) && string.IsNullOrWhiteSpace(Selector))
             {
-                return null;
+                return Raw;
             }
 
             return $"gopher://{HostName}{Selector}";

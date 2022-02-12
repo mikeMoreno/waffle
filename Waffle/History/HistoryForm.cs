@@ -36,13 +36,6 @@ namespace Waffle.History
             var historyEntities = HistoryService.LoadHistory(SelectedTabKey);
 
             listHistoryEntities.DataSource = historyEntities;
-
-            //listHistoryEntities.DisplayMember = 
-
-            //foreach(var historyEntity in historyEntities)
-            //{
-            //    listHistoryEntities.Items.
-            //}
         }
 
         private void listHistoryEntities_DoubleClick(object sender, EventArgs e)
@@ -56,7 +49,7 @@ namespace Waffle.History
 
             var historyEntity = selectedItem as HistoryEntity;
 
-            LinkClicked?.Invoke(this, new LinkClickedEventArgs(new LinkLine(historyEntity.Url)));
+            LinkClicked?.Invoke(this, new LinkClickedEventArgs(historyEntity.SelectorLine));
         }
     }
 }

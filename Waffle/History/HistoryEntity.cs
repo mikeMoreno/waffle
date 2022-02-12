@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Waffle.Lib;
 
 namespace Waffle.History
 {
@@ -10,11 +11,18 @@ namespace Waffle.History
     {
         public DateTime Timestamp { get; set; }
 
-        public string Url { get; set; }
+        public SelectorLine SelectorLine { get; set; }
 
         public override string ToString()
         {
-            return $"{Timestamp} - {Url}";
+            string link = SelectorLine.GetLink();
+
+            if (string.IsNullOrWhiteSpace(link))
+            {
+                link = SelectorLine.Raw;
+            }
+
+            return $"{Timestamp} - {link}";
         }
     }
 }

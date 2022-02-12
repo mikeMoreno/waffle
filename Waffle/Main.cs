@@ -197,7 +197,7 @@ namespace Waffle
 
             btnBack.Enabled = true;
 
-            HistoryService.AddUrl(selectedTab.Key, selectorLine.GetLink());
+            HistoryService.AddUrl(selectedTab.Key, selectorLine);
         }
 
         private async Task<bool> RenderUrlAsync(SelectorLine selectorLine)

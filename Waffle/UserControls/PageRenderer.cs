@@ -268,7 +268,7 @@ namespace Waffle.UserControls
             var label = BuildLabel(x, y, selectorLine);
             label.ForeColor = Color.CornflowerBlue;
 
-            label.Click += async (object sender, EventArgs e) =>
+            label.Click += (object sender, EventArgs e) =>
             {
                 var selectorLine = (sender as Label).Tag as SelectorLine;
 
