@@ -74,13 +74,14 @@ namespace Waffle.Navigation
                 if(selectorLine != null)
                 {
                     txtUrl.Text = selectorLine.GetLink();
-                    Text = $"Waffle - {pageRenderer.CurrentPageType}";
                 }
                 else
                 {
                     txtUrl.Text = "";
                 }
             }
+
+            Text = $"Waffle - {pageRenderer.CurrentPageType}";
         }
 
         private TabPage SpawnNewTab()
@@ -195,19 +196,22 @@ namespace Waffle.Navigation
             selectedTab.Text = selectorLine.GetUserFriendlyName();
             Text = $"Waffle - {pageRenderer.CurrentPageType}";
 
-            if (!pageRenderer.VisitedPages.Any())
+            if (!newTab)
             {
-                pageRenderer.VisitedPages.Push(new LinkLine("<home>"));
-            }
-            else
-            {
-                if (currentLink != null)
+                if (!pageRenderer.VisitedPages.Any())
                 {
-                    pageRenderer.VisitedPages.Push(currentLink);
+                    pageRenderer.VisitedPages.Push(new LinkLine("<home>"));
                 }
-            }
+                else
+                {
+                    if (currentLink != null)
+                    {
+                        pageRenderer.VisitedPages.Push(currentLink);
+                    }
+                }
 
-            btnBack.Enabled = true;
+                btnBack.Enabled = true;
+            }
 
             HistoryService.AddUrl(selectedTab.Key, selectorLine);
             pageRenderer.CurrentSelectorLine = selectorLine;
