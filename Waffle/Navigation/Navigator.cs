@@ -427,7 +427,8 @@ namespace Waffle.Navigation
 
         private void btnAbout_Click(object sender, EventArgs e)
         {
-
+            var aboutForm = new AboutForm();
+            aboutForm.Show();
         }
 
         private void btnFavorite_Click(object sender, EventArgs e)
