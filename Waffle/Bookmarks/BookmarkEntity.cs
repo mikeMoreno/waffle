@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Waffle
+namespace Waffle.Bookmarks
 {
     [JsonConverter(typeof(BookmarkEntityConverter))]
     internal abstract class BookmarkEntity

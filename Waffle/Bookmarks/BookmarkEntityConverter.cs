@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
-namespace Waffle
+namespace Waffle.Bookmarks
 {
     public class BaseSpecifiedConcreteClassConverter : DefaultContractResolver
     {

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Waffle.Forms
+namespace Waffle.Bookmarks
 {
     partial class BookmarkEditor : Form
     {

@@ -1,4 +1,4 @@
-﻿namespace Waffle.Forms
+﻿namespace Waffle.Bookmarks
 {
     partial class BookmarkAdder
     {
