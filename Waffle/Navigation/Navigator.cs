@@ -47,6 +47,10 @@ namespace Waffle.Navigation
                 return;
             }
 
+            var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().SingleOrDefault();
+
+            btnBack.Enabled = pageRenderer.VisitedPages.Any();
+
             SetUrlTextBoxText(selectedTab);
         }
 
@@ -81,7 +85,7 @@ namespace Waffle.Navigation
 
         private TabPage SpawnNewTab()
         {
-            var pageRenderer = BuildPageRenderer(WaffleLib);
+            var pageRenderer = BuildPageRenderer();
 
             var tabPage = new RequestTab
             {
@@ -309,7 +313,7 @@ namespace Waffle.Navigation
             pageRenderer.StandbyText = txtUrl.Text;
         }
 
-        private PageRenderer BuildPageRenderer(WaffleLib waffleLib)
+        private PageRenderer BuildPageRenderer()
         {
             var pageRenderer = PageRenderer.Instance();
 
