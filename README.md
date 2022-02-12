@@ -5,4 +5,4 @@
 
 # Waffle
 
-Waffle is a free and minimalistic Windows web client for the minimalistic [Gopher](https://en.wikipedia.org/wiki/Gopher_(protocol)) protocol.
+Waffle is a free and open-source [Gopher](https://en.wikipedia.org/wiki/Gopher_(protocol)) client.
