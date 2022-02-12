@@ -281,6 +281,8 @@ namespace Waffle
                         Render(imageResponse);
                         break;
                     case BinaryResponse binaryResponse:
+
+                        // TODO: set up selector/path correctly in LinkLine and then merge this code with the other BuildLinkLabel method.
                         var fileName = line[(line.LastIndexOf('/') + 1)..];
 
                         var fsDialog = new SaveFileDialog

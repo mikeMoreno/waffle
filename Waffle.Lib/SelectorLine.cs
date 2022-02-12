@@ -99,7 +99,7 @@ namespace Waffle.Lib
             return line;
         }
 
-        public static ItemType GetItemType(string absoluteUrl)
+        protected static ItemType GetItemType(string absoluteUrl)
         {
             UrlValidator.ValidateUrl(absoluteUrl);
 
@@ -193,21 +193,6 @@ namespace Waffle.Lib
             }
 
             return path;
-        }
-    }
-
-    public record LinkLine : SelectorLine
-    {
-        public LinkLine(string line) : base(line)
-        {
-            Raw = Raw.Trim();
-            DisplayString = Raw;
-            ItemType = GetItemType(Raw);
-        }
-
-        public override string GetLink()
-        {
-            return Raw;
         }
     }
 }

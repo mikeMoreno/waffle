@@ -11,20 +11,6 @@ namespace Waffle.Lib
 {
     public class WaffleLib
     {
-        public async Task<Response> GetAsync(string absoluteUrl)
-        {
-            // TODO: until / if we can just pass around SelectorLines / LinkLines
-            var itemType = SelectorLine.GetItemType(absoluteUrl);
-
-            return itemType switch
-            {
-                ItemType.Menu => await GetMenuAsync(absoluteUrl),
-                ItemType.Text => await GetTextFileAsync(absoluteUrl),
-                ItemType.PNG => await GetPngFileAsync(absoluteUrl),
-                _ => await GetMenuAsync(absoluteUrl),
-            };
-        }
-
         public async Task<Response> GetAsync(SelectorLine selectorLine)
         {
             var link = selectorLine.GetLink();
@@ -34,11 +20,13 @@ namespace Waffle.Lib
                 ItemType.Menu => await GetMenuAsync(link),
                 ItemType.Text => await GetTextFileAsync(link),
                 ItemType.PNG => await GetPngFileAsync(link),
+                ItemType.Image => await GetImageFileAsync(link),
+                ItemType.BinaryFile => await GetBinaryFile(link),
                 _ => await GetMenuAsync(link),
             };
         }
 
-        public async Task<MenuResponse> GetMenuAsync(string absoluteUrl)
+        private async Task<MenuResponse> GetMenuAsync(string absoluteUrl)
         {
             UrlValidator.ValidateUrl(absoluteUrl);
 
@@ -63,7 +51,7 @@ namespace Waffle.Lib
             }
         }
 
-        public async Task<TextResponse> GetTextFileAsync(string absoluteUrl)
+        private async Task<TextResponse> GetTextFileAsync(string absoluteUrl)
         {
             UrlValidator.ValidateUrl(absoluteUrl);
 
@@ -100,7 +88,7 @@ namespace Waffle.Lib
             };
         }
 
-        public async Task<PngResponse> GetPngFileAsync(string absoluteUrl)
+        private async Task<PngResponse> GetPngFileAsync(string absoluteUrl)
         {
             UrlValidator.ValidateUrl(absoluteUrl);
 
@@ -125,7 +113,7 @@ namespace Waffle.Lib
             }
         }
 
-        public async Task<ImageResponse> GetImageFileAsync(string absoluteUrl)
+        private async Task<ImageResponse> GetImageFileAsync(string absoluteUrl)
         {
             UrlValidator.ValidateUrl(absoluteUrl);
 
@@ -150,7 +138,7 @@ namespace Waffle.Lib
             }
         }
 
-        public async Task<BinaryResponse> GetBinaryFile(string absoluteUrl)
+        private async Task<BinaryResponse> GetBinaryFile(string absoluteUrl)
         {
             UrlValidator.ValidateUrl(absoluteUrl);
 
