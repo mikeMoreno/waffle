@@ -152,6 +152,8 @@ namespace Waffle
                 return;
             }
 
+            absoluteUrl = absoluteUrl.Trim();
+
             await VisitSiteAsync(new LinkLine(absoluteUrl));
         }
 
