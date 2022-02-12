@@ -145,7 +145,7 @@ namespace Waffle
             await VisitSiteAsync(txtUrl.Text);
         }
 
-        private async Task VisitSiteAsync(string absoluteUrl)
+        private async Task VisitSiteAsync(string absoluteUrl, bool newTab = false)
         {
             if (string.IsNullOrWhiteSpace(absoluteUrl))
             {
@@ -157,7 +157,7 @@ namespace Waffle
             await VisitSiteAsync(new LinkLine(absoluteUrl));
         }
 
-        private async Task VisitSiteAsync(SelectorLine selectorLine)
+        private async Task VisitSiteAsync(SelectorLine selectorLine, bool newTab = false)
         {
             var selectedTab = tabSitePages.SelectedTab as RequestTab;
             var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().Single();
@@ -437,6 +437,7 @@ namespace Waffle
             };
 
             bookmarkPanel.LinkClicked += BookmarkPanel_LinkClicked;
+            bookmarkPanel.OpenInNewTabClicked += BookmarkPanel_OpenInNewTabClicked;
 
             Controls.Add(bookmarkPanel);
             bookmarkPanel.BringToFront();
@@ -447,9 +448,15 @@ namespace Waffle
             await VisitSiteAsync(e.Bookmark.Url);
         }
 
+        private async void BookmarkPanel_OpenInNewTabClicked(object sender, BookmarkClickedEventArgs e)
+        {
+            await VisitSiteAsync(e.Bookmark.Url, newTab: true);
+        }
+
         private async void HistoryForm_LinkClicked(object sender, LinkClickedEventArgs e)
         {
-            await VisitSiteAsync(e.SelectorLine);
+            // TODO: by default, newTab: false. have separate button for opening in a new tab, like with bookmarks.
+            await VisitSiteAsync(e.SelectorLine, newTab: true);
         }
     }
 }

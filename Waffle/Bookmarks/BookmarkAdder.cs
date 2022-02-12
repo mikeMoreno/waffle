@@ -5,7 +5,7 @@ namespace Waffle.Bookmarks
 {
     public partial class BookmarkAdder : Form
     {
-        private readonly string absoluteUrl;
+        private string AbsoluteUrl { get; }
 
         private List<BookmarkEntity> BookmarkEntities { get; }
 
@@ -13,9 +13,7 @@ namespace Waffle.Bookmarks
         {
             InitializeComponent();
 
-            absoluteUrl = absoluteUrl.Trim();
-
-            this.absoluteUrl = linkLine.Raw;
+            AbsoluteUrl = linkLine.Raw.Trim();
 
             txtName.Text = linkLine.GetUserFriendlyName();
 
@@ -86,6 +84,8 @@ namespace Waffle.Bookmarks
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            // TODO: persist entire selectorLine
+
             var name = txtName.Text.Trim();
 
             if (string.IsNullOrWhiteSpace(name))
@@ -98,7 +98,7 @@ namespace Waffle.Bookmarks
             var bookmark = new Bookmark()
             {
                 Name = name,
-                Url = absoluteUrl,
+                Url = AbsoluteUrl,
             };
 
             var selectedNode = bookmarkTree.SelectedNode;

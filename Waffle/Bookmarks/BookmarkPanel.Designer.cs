@@ -1,4 +1,4 @@
-﻿namespace Waffle.UserControls
+﻿namespace Waffle.Bookmarks
 {
     partial class BookmarkPanel
     {
@@ -34,9 +34,11 @@
             this.bookmarkTree = new System.Windows.Forms.TreeView();
             this.bookmarkPanelContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.btnAddBookmark = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnAddFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.btnEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.btnDelete = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnAddFolder = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnOpenInNewTab = new System.Windows.Forms.ToolStripMenuItem();
             this.bookmarkPanelContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -77,12 +79,14 @@
             // bookmarkPanelContextMenu
             // 
             this.bookmarkPanelContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnOpenInNewTab,
+            this.toolStripSeparator1,
             this.btnAddBookmark,
             this.btnAddFolder,
             this.btnEdit,
             this.btnDelete});
             this.bookmarkPanelContextMenu.Name = "bookmarkPanelContextMenu";
-            this.bookmarkPanelContextMenu.Size = new System.Drawing.Size(181, 114);
+            this.bookmarkPanelContextMenu.Size = new System.Drawing.Size(181, 142);
             // 
             // btnAddBookmark
             // 
@@ -90,6 +94,13 @@
             this.btnAddBookmark.Size = new System.Drawing.Size(180, 22);
             this.btnAddBookmark.Text = "Add Bookmark";
             this.btnAddBookmark.Click += new System.EventHandler(this.btnAddBookmark_Click);
+            // 
+            // btnAddFolder
+            // 
+            this.btnAddFolder.Name = "btnAddFolder";
+            this.btnAddFolder.Size = new System.Drawing.Size(180, 22);
+            this.btnAddFolder.Text = "Add Folder";
+            this.btnAddFolder.Click += new System.EventHandler(this.btnAddFolder_Click);
             // 
             // btnEdit
             // 
@@ -105,12 +116,17 @@
             this.btnDelete.Text = "Delete";
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
-            // btnAddFolder
+            // toolStripSeparator1
             // 
-            this.btnAddFolder.Name = "btnAddFolder";
-            this.btnAddFolder.Size = new System.Drawing.Size(180, 22);
-            this.btnAddFolder.Text = "Add Folder";
-            this.btnAddFolder.Click += new System.EventHandler(this.btnAddFolder_Click);
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // btnOpenInNewTab
+            // 
+            this.btnOpenInNewTab.Name = "btnOpenInNewTab";
+            this.btnOpenInNewTab.Size = new System.Drawing.Size(180, 22);
+            this.btnOpenInNewTab.Text = "Open in New Tab";
+            this.btnOpenInNewTab.Click += new System.EventHandler(this.btnOpenInNewTab_Click);
             // 
             // BookmarkPanel
             // 
@@ -137,5 +153,7 @@
         private ToolStripMenuItem btnEdit;
         private ToolStripMenuItem btnAddBookmark;
         private ToolStripMenuItem btnAddFolder;
+        private ToolStripMenuItem btnOpenInNewTab;
+        private ToolStripSeparator toolStripSeparator1;
     }
 }
