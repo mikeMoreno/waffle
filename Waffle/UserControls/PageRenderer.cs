@@ -25,11 +25,11 @@ namespace Waffle.UserControls
 
         public ItemType CurrentPageType { get; set; }
 
-        public WaffleLib WaffleLib { get; set; }
-
         public Stack<SelectorLine> VisitedPages { get; } = new Stack<SelectorLine>();
 
         public string StandbyText { get; set; }
+
+        public SelectorLine CurrentSelectorLine { get; set; }
 
         public delegate void LinkClickedEventHandler(object sender, LinkClickedEventArgs e);
 
@@ -364,11 +364,10 @@ namespace Waffle.UserControls
             ViewingHistory?.Invoke(this, new ViewHistoryEventArgs());
         }
 
-        public static PageRenderer Instance(WaffleLib waffleLib)
+        public static PageRenderer Instance()
         {
             var pageRenderer = new PageRenderer
             {
-                WaffleLib = waffleLib,
                 AutoScroll = true,
                 Dock = DockStyle.Fill
             };

@@ -66,12 +66,12 @@ namespace Waffle
             }
             else
             {
-                if (pageRenderer.VisitedPages.TryPeek(out SelectorLine line))
+                var selectorLine = pageRenderer.CurrentSelectorLine;
+                
+                if(selectorLine != null)
                 {
-                    if (line.GetLink() != "<home>")
-                    {
-                        txtUrl.Text = line.GetLink();
-                    }
+                    txtUrl.Text = selectorLine.GetLink();
+                    Text = $"Waffle - {pageRenderer.CurrentPageType}";
                 }
                 else
                 {
@@ -154,11 +154,20 @@ namespace Waffle
 
             absoluteUrl = absoluteUrl.Trim();
 
-            await VisitSiteAsync(new LinkLine(absoluteUrl));
+            await VisitSiteAsync(new LinkLine(absoluteUrl), newTab);
         }
 
         private async Task VisitSiteAsync(SelectorLine selectorLine, bool newTab = false)
         {
+            if (newTab)
+            {
+                tabSitePages.SelectedIndexChanged -= TabSitePages_SelectedIndexChanged;
+
+                SpawnNewTab();
+
+                tabSitePages.SelectedIndexChanged += TabSitePages_SelectedIndexChanged;
+            }
+
             var selectedTab = tabSitePages.SelectedTab as RequestTab;
             var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().Single();
 
@@ -198,6 +207,7 @@ namespace Waffle
             btnBack.Enabled = true;
 
             HistoryService.AddUrl(selectedTab.Key, selectorLine);
+            pageRenderer.CurrentSelectorLine = selectorLine;
         }
 
         private async Task<bool> RenderUrlAsync(SelectorLine selectorLine)
@@ -302,7 +312,7 @@ namespace Waffle
 
         private PageRenderer BuildPageRenderer(WaffleLib waffleLib)
         {
-            var pageRenderer = PageRenderer.Instance(waffleLib);
+            var pageRenderer = PageRenderer.Instance();
 
             pageRenderer.LinkClicked += PageRenderer_LinkClicked;
             pageRenderer.ViewingSource += PageRenderer_ViewingSource;
