@@ -8,8 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Waffle.Forms;
 
-namespace Waffle
+namespace Waffle.UserControls
 {
     partial class BookmarkPanel : UserControl
     {

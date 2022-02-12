@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Waffle.Lib;
 
-namespace Waffle
+namespace Waffle.UserControls
 {
     partial class PageRenderer : UserControl
     {

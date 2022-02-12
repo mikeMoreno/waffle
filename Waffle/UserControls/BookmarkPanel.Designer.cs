@@ -1,4 +1,4 @@
-﻿namespace Waffle
+﻿namespace Waffle.UserControls
 {
     partial class BookmarkPanel
     {

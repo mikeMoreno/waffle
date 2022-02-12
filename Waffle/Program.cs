@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Waffle.Forms;
 using Waffle.History;
 using Waffle.Lib;
 
