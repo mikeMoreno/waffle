@@ -46,6 +46,15 @@ namespace Waffle.Lib
             }
         }
 
+        public string GetUserFriendlyName()
+        {
+            var absoluteUrl = GetLink();
+            absoluteUrl = absoluteUrl.Replace("gopher://", "");
+            absoluteUrl = absoluteUrl.TrimEnd('/');
+
+            return absoluteUrl;
+        }
+
         public virtual string GetLink()
         {
             if (ItemType != ItemType.Text &&

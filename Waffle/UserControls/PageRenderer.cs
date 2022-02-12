@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Waffle.History;
 using Waffle.Lib;
 
 namespace Waffle.UserControls
@@ -17,8 +18,6 @@ namespace Waffle.UserControls
         private ToolTip UnknownEntity { get; }
 
         private string CurrentlyDisplayedText { get; set; }
-
-        private List<SelectorLine> CurrentlyViewedSelectorLines { get; set; }
 
         private Image CurrentlyDisplayedPng { get; set; }
 
@@ -39,6 +38,10 @@ namespace Waffle.UserControls
         public delegate void ViewSourceEventHandler(object sender, ViewSourceEventArgs e);
 
         public event ViewSourceEventHandler ViewingSource;
+
+        public delegate void ViewHistoryEventHandler(object sender, ViewHistoryEventArgs e);
+
+        public event ViewHistoryEventHandler ViewingHistory;
 
         public delegate void CloseTabEventHandler(object sender, EventArgs e);
 
@@ -208,7 +211,7 @@ namespace Waffle.UserControls
             btnViewSource.Enabled = false;
         }
 
-        public void ViewSource(TextResponse response)
+        public void RenderSource(TextResponse response)
         {
             Render(response);
 
@@ -269,51 +272,7 @@ namespace Waffle.UserControls
             {
                 var selectorLine = (sender as Label).Tag as SelectorLine;
 
-                if (selectorLine.ItemType != ItemType.BinaryFile)
-                {
-                    LinkClicked?.Invoke(this, new LinkClickedEventArgs(selectorLine));
-                }
-
-                var response = await WaffleLib.GetAsync(selectorLine);
-
-                if (!response.IsSuccess)
-                {
-                    MessageBox.Show(response.ErrorMessage);
-
-                    return;
-                }
-
-                switch (response)
-                {
-                    case MenuResponse menuResponse:
-                        Render(menuResponse);
-                        break;
-                    case TextResponse textResponse:
-                        Render(textResponse);
-                        break;
-                    case PngResponse pngResponse:
-                        Render(pngResponse);
-                        break;
-                    case ImageResponse imageResponse:
-                        Render(imageResponse);
-                        break;
-                    case BinaryResponse binaryResponse:
-                        var fileName = selectorLine.Selector[(selectorLine.Selector.LastIndexOf('/') + 1)..];
-
-                        var fsDialog = new SaveFileDialog
-                        {
-                            FileName = fileName
-                        };
-
-                        var ans = fsDialog.ShowDialog();
-
-                        if (ans == DialogResult.OK)
-                        {
-                            File.WriteAllBytes(fsDialog.FileName, binaryResponse.Bytes);
-                        }
-
-                        break;
-                }
+                LinkClicked?.Invoke(this, new LinkClickedEventArgs(selectorLine));
             };
 
             return label;
@@ -398,6 +357,11 @@ namespace Waffle.UserControls
         private void btnViewSource_Click(object sender, EventArgs e)
         {
             ViewingSource?.Invoke(this, new ViewSourceEventArgs(CurrentlyDisplayedText));
+        }
+
+        private void btnViewHistory_Click(object sender, EventArgs e)
+        {
+            ViewingHistory?.Invoke(this, new ViewHistoryEventArgs());
         }
 
         public static PageRenderer Instance(WaffleLib waffleLib)

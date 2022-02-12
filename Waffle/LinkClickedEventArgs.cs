@@ -11,16 +11,6 @@ namespace Waffle
     {
         public SelectorLine SelectorLine { get; }
 
-        //public string Link { get; }
-
-        //public ItemType ItemType { get; }
-
-        //public LinkClickedEventArgs(string link, ItemType itemType)
-        //{
-        //    Link = link;
-        //    ItemType = itemType;
-        //}
-
         public LinkClickedEventArgs(SelectorLine selectorLine)
         {
             SelectorLine = selectorLine;

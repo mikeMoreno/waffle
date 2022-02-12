@@ -19,12 +19,35 @@ namespace Waffle.History
                 Url = url,
             });
 
-            SaveHistory(tabKey, history);
+            SaveHistory(history, tabKey);
         }
 
-        private List<HistoryEntity> LoadHistory(Guid tabKey)
+        public void Consolidate()
         {
-            var historyFileName = Path.Combine(Globals.HistoryFolder, $"{tabKey}_history.json");
+            var allEntities = LoadHistory();
+
+            var historyFiles = Directory.GetFiles(Globals.HistoryFolder);
+
+            foreach(var historyfile in historyFiles)
+            {
+                if(Path.GetFileName(historyfile) == "all_history.json")
+                {
+                    continue;
+                }
+
+                var entities = JsonConvert.DeserializeObject<List<HistoryEntity>>(File.ReadAllText(historyfile));
+
+                allEntities.AddRange(entities);
+
+                File.Delete(historyfile);
+            }
+
+            SaveHistory(allEntities);
+        }
+
+        public List<HistoryEntity> LoadHistory(Guid? tabKey = null)
+        {
+            var historyFileName = GetHistoryFileName(tabKey);
 
             if (!File.Exists(historyFileName))
             {
@@ -38,16 +61,23 @@ namespace Waffle.History
                 return new List<HistoryEntity>();
             }
 
-            return historyEntities;
+            return historyEntities.OrderByDescending(h => h.Timestamp).ToList();
         }
 
-        private void SaveHistory(Guid tabKey, List<HistoryEntity> historyEntities)
+        private void SaveHistory(List<HistoryEntity> historyEntities, Guid? tabKey = null)
         {
-            var historyFileName = Path.Combine(Globals.HistoryFolder, $"{tabKey}_history.json");
+            var historyFileName = GetHistoryFileName(tabKey);
 
             var serializedBookmarks = JsonConvert.SerializeObject(historyEntities, Formatting.Indented);
 
             File.WriteAllText(historyFileName, serializedBookmarks);
+        }
+
+        private static string GetHistoryFileName(Guid? tabKey = null)
+        {
+            var historyFileName = tabKey == null ? Path.Combine(Globals.HistoryFolder, "all_history.json") :
+                                       Path.Combine(Globals.HistoryFolder, $"{tabKey}_history.json");
+            return historyFileName;
         }
     }
 }

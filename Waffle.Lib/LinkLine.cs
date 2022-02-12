@@ -20,13 +20,13 @@ namespace Waffle.Lib
             return Raw;
         }
 
-        public string GetUserFriendlyName()
-        {
-            var absoluteUrl = Raw;
-            absoluteUrl = absoluteUrl.Replace("gopher://", "");
-            absoluteUrl = absoluteUrl.TrimEnd('/');
+        //public string GetUserFriendlyName()
+        //{
+        //    var absoluteUrl = Raw;
+        //    absoluteUrl = absoluteUrl.Replace("gopher://", "");
+        //    absoluteUrl = absoluteUrl.TrimEnd('/');
 
-            return absoluteUrl;
-        }
+        //    return absoluteUrl;
+        //}
     }
 }
