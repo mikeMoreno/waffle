@@ -28,7 +28,7 @@ namespace Waffle
 
         public WaffleLib WaffleLib { get; set; }
 
-        public Stack<(string, ItemType)> VisitedUrls { get; } = new Stack<(string, ItemType)>();
+        public Stack<SelectorLine> VisitedUrls { get; } = new Stack<SelectorLine>();
 
         public string StandbyText { get; set; }
 
@@ -245,35 +245,44 @@ namespace Waffle
 
         private Label BuildLinkLabel(int x, int y, string line)
         {
+            var linkLine = new LinkLine(line);
+
             var label = BuildLabel(x, y, line);
             label.ForeColor = Color.CornflowerBlue;
 
             label.Click += async (object sender, EventArgs e) =>
             {
-                var itemType = WaffleLib.GetItemType(line);
-
-                if(itemType != ItemType.BinaryFile)
+                if (linkLine.ItemType != ItemType.BinaryFile)
                 {
-                    LinkClicked?.Invoke(this, new LinkClickedEventArgs(line, itemType));
+                    LinkClicked?.Invoke(this, new LinkClickedEventArgs(linkLine));
                 }
 
-                switch (itemType)
-                {
-                    case ItemType.Menu:
-                        Render(await WaffleLib.GetMenuAsync(line));
-                        break;
-                    case ItemType.Text:
-                        Render(await WaffleLib.GetTextFileAsync(line));
-                        break;
-                    case ItemType.PNG:
-                        Render(await WaffleLib.GetPngFileAsync(line));
-                        break;
-                    case ItemType.Image:
-                        Render(await WaffleLib.GetImageFileAsync(line));
-                        break;
-                    case ItemType.BinaryFile:
-                        var response = await WaffleLib.GetBinaryFile(line);
+                var response = await WaffleLib.GetAsync(linkLine);
 
+                if (!response.IsSuccess)
+                {
+                    MessageBox.Show(response.ErrorMessage);
+
+                    return;
+                }
+
+                switch (response)
+                {
+                    case MenuResponse menuResponse:
+                        Render(menuResponse);
+                        break;
+                    case TextResponse textResponse:
+                        Render(textResponse);
+                        break;
+                    case PngResponse pngResponse:
+                        Render(pngResponse);
+                        break;
+                    case ImageResponse imageResponse:
+                        Render(imageResponse);
+                        break;
+                    case BinaryResponse binaryResponse:
+
+                        // TODO: set up selector/path correctly in LinkLine and then merge this code with the other BuildLinkLabel method.
                         var fileName = line[(line.LastIndexOf('/') + 1)..];
 
                         var fsDialog = new SaveFileDialog
@@ -285,11 +294,8 @@ namespace Waffle
 
                         if (ans == DialogResult.OK)
                         {
-                            File.WriteAllBytes(fsDialog.FileName, response.Bytes);
+                            File.WriteAllBytes(fsDialog.FileName, binaryResponse.Bytes);
                         }
-                        break;
-                    default:
-                        Render(await WaffleLib.GetMenuAsync(line));
                         break;
                 }
             };
@@ -323,55 +329,49 @@ namespace Waffle
             {
                 var selectorLine = (sender as Label).Tag as SelectorLine;
 
-                if (selectorLine.ItemType == ItemType.Text)
+                if (selectorLine.ItemType != ItemType.BinaryFile)
                 {
-                    LinkClicked?.Invoke(this, new LinkClickedEventArgs(selectorLine.GetLink(), selectorLine.ItemType));
-
-                    var response = await WaffleLib.GetTextFileAsync(selectorLine.GetLink());
-
-                    Render(response);
+                    LinkClicked?.Invoke(this, new LinkClickedEventArgs(selectorLine));
                 }
-                else if (selectorLine.ItemType == ItemType.Menu)
+
+                var response = await WaffleLib.GetAsync(selectorLine);
+
+                if (!response.IsSuccess)
                 {
-                    LinkClicked?.Invoke(this, new LinkClickedEventArgs(selectorLine.GetLink(), selectorLine.ItemType));
+                    MessageBox.Show(response.ErrorMessage);
 
-                    var response = await WaffleLib.GetMenuAsync(selectorLine.GetLink());
-
-                    Render(response);
+                    return;
                 }
-                else if (selectorLine.ItemType == ItemType.PNG)
+
+                switch (response)
                 {
-                    LinkClicked?.Invoke(this, new LinkClickedEventArgs(selectorLine.GetLink(), selectorLine.ItemType));
+                    case MenuResponse menuResponse:
+                        Render(menuResponse);
+                        break;
+                    case TextResponse textResponse:
+                        Render(textResponse);
+                        break;
+                    case PngResponse pngResponse:
+                        Render(pngResponse);
+                        break;
+                    case ImageResponse imageResponse:
+                        Render(imageResponse);
+                        break;
+                    case BinaryResponse binaryResponse:
+                        var fileName = selectorLine.Selector[(selectorLine.Selector.LastIndexOf('/') + 1)..];
 
-                    var response = await WaffleLib.GetPngFileAsync(selectorLine.GetLink());
+                        var fsDialog = new SaveFileDialog
+                        {
+                            FileName = fileName
+                        };
 
-                    Render(response);
-                }
-                else if (selectorLine.ItemType == ItemType.Image)
-                {
-                    LinkClicked?.Invoke(this, new LinkClickedEventArgs(selectorLine.GetLink(), selectorLine.ItemType));
+                        var ans = fsDialog.ShowDialog();
 
-                    var response = await WaffleLib.GetImageFileAsync(selectorLine.GetLink());
-
-                    Render(response);
-                }
-                else if (selectorLine.ItemType == ItemType.BinaryFile)
-                {
-                    var response = await WaffleLib.GetBinaryFile(selectorLine.GetLink());
-
-                    var fileName = selectorLine.Selector[(selectorLine.Selector.LastIndexOf('/') + 1)..];
-
-                    var fsDialog = new SaveFileDialog
-                    {
-                        FileName = fileName
-                    };
-
-                    var ans = fsDialog.ShowDialog();
-
-                    if (ans == DialogResult.OK)
-                    {
-                        File.WriteAllBytes(fsDialog.FileName, response.Bytes);
-                    }
+                        if (ans == DialogResult.OK)
+                        {
+                            File.WriteAllBytes(fsDialog.FileName, binaryResponse.Bytes);
+                        }
+                        break;
                 }
             };
 
