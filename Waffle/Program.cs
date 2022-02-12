@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Waffle.History;
 using Waffle.Lib;
+using Waffle.Navigation;
 
 namespace Waffle
 {
@@ -25,14 +26,14 @@ namespace Waffle
                 .ConfigureServices((_, services) => services
                             .AddSingleton<HistoryService>()
                             .AddSingleton<WaffleLib>()
-                            .AddSingleton<Main>())
+                            .AddSingleton<Navigator>())
                             .Build();
 
             using (var serviceScope = host.Services.CreateScope())
             {
                 var services = serviceScope.ServiceProvider;
 
-                Application.Run(services.GetRequiredService<Main>());
+                Application.Run(services.GetRequiredService<Navigator>());
             }
         }
 

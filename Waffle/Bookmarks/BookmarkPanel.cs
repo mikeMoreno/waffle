@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Waffle.Bookmarks;
 
-namespace Waffle.UserControls
+namespace Waffle.Bookmarks
 {
     partial class BookmarkPanel : UserControl
     {
@@ -19,6 +19,10 @@ namespace Waffle.UserControls
         public delegate void BookmarkClickedEventHandler(object sender, BookmarkClickedEventArgs e);
 
         public event BookmarkClickedEventHandler LinkClicked;
+
+        public delegate void OpenInNewTabEventHandler(object sender, BookmarkClickedEventArgs e);
+
+        public event OpenInNewTabEventHandler OpenInNewTabClicked;
 
         public BookmarkPanel()
         {
@@ -205,6 +209,8 @@ namespace Waffle.UserControls
 
         private void btnAddBookmark_Click(object sender, EventArgs e)
         {
+            // TODO: persist entire selectorLine
+
             var newBookmark = new Bookmark();
 
             using (var bookmarkEditor = new BookmarkEditor(newBookmark))
@@ -304,6 +310,24 @@ namespace Waffle.UserControls
 
             PopulateBookmarkTree(BookmarkEntities);
             SaveBookmarks(BookmarkEntities);
+        }
+
+        private void btnOpenInNewTab_Click(object sender, EventArgs e)
+        {
+            var selectedNode = bookmarkTree.SelectedNode;
+
+            if (selectedNode != null)
+            {
+                bookmarkTree.SelectedNode = selectedNode;
+            }
+
+            if (selectedNode != null)
+            {
+                if (bookmarkTree.SelectedNode.Tag is Bookmark bookmark)
+                {
+                    OpenInNewTabClicked?.Invoke(this, new BookmarkClickedEventArgs(bookmark));
+                }
+            }
         }
     }
 }

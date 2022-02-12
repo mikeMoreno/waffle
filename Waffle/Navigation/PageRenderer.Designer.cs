@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace Waffle.UserControls
+namespace Waffle.Navigation
 {
     partial class PageRenderer
     {
@@ -36,6 +36,7 @@ namespace Waffle.UserControls
             this.btnViewSource = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnCloseTab = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnViewHistory = new System.Windows.Forms.ToolStripMenuItem();
             this.pageRendererContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -44,10 +45,11 @@ namespace Waffle.UserControls
             this.pageRendererContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnSavePage,
             this.btnViewSource,
+            this.btnViewHistory,
             this.toolStripSeparator1,
             this.btnCloseTab});
             this.pageRendererContextMenu.Name = "pageRendererContextMenu";
-            this.pageRendererContextMenu.Size = new System.Drawing.Size(181, 98);
+            this.pageRendererContextMenu.Size = new System.Drawing.Size(181, 120);
             // 
             // btnSavePage
             // 
@@ -76,6 +78,13 @@ namespace Waffle.UserControls
             this.btnCloseTab.Text = "Close";
             this.btnCloseTab.Click += new System.EventHandler(this.btnCloseTab_Click);
             // 
+            // btnViewHistory
+            // 
+            this.btnViewHistory.Name = "btnViewHistory";
+            this.btnViewHistory.Size = new System.Drawing.Size(180, 22);
+            this.btnViewHistory.Text = "View History";
+            this.btnViewHistory.Click += new System.EventHandler(this.btnViewHistory_Click);
+            // 
             // PageRenderer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -96,5 +105,6 @@ namespace Waffle.UserControls
         private ToolStripMenuItem btnViewSource;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem btnCloseTab;
+        private ToolStripMenuItem btnViewHistory;
     }
 }

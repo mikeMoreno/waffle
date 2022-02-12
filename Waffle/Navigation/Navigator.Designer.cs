@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
 
-namespace Waffle
+namespace Waffle.Navigation
 {
-    partial class Main
+    partial class Navigator
     {
         /// <summary>
         ///  Required designer variable.
@@ -30,7 +30,7 @@ namespace Waffle
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Navigator));
             this.txtUrl = new System.Windows.Forms.TextBox();
             this.btnGo = new System.Windows.Forms.Button();
             this.btnBack = new System.Windows.Forms.Button();
@@ -39,8 +39,11 @@ namespace Waffle
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnView = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnViewHistory = new System.Windows.Forms.ToolStripMenuItem();
             this.btnBookmark = new System.Windows.Forms.Button();
             this.btnBookmarks = new System.Windows.Forms.Button();
+            this.btnAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.tabSitePages.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -102,7 +105,9 @@ namespace Waffle
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.btnView,
+            this.btnAbout});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(825, 24);
@@ -123,6 +128,21 @@ namespace Waffle
             this.btnExit.Size = new System.Drawing.Size(93, 22);
             this.btnExit.Text = "Exit";
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
+            // 
+            // btnView
+            // 
+            this.btnView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnViewHistory});
+            this.btnView.Name = "btnView";
+            this.btnView.Size = new System.Drawing.Size(44, 20);
+            this.btnView.Text = "View";
+            // 
+            // btnViewHistory
+            // 
+            this.btnViewHistory.Name = "btnViewHistory";
+            this.btnViewHistory.Size = new System.Drawing.Size(180, 22);
+            this.btnViewHistory.Text = "History";
+            this.btnViewHistory.Click += new System.EventHandler(this.btnViewHistory_Click);
             // 
             // btnBookmark
             // 
@@ -145,6 +165,13 @@ namespace Waffle
             this.btnBookmarks.TabIndex = 8;
             this.btnBookmarks.UseVisualStyleBackColor = true;
             this.btnBookmarks.Click += new System.EventHandler(this.btnBookmarks_Click);
+            // 
+            // btnAbout
+            // 
+            this.btnAbout.Name = "btnAbout";
+            this.btnAbout.Size = new System.Drawing.Size(52, 20);
+            this.btnAbout.Text = "About";
+            this.btnAbout.Click += new System.EventHandler(this.btnAbout_Click);
             // 
             // Main
             // 
@@ -184,5 +211,8 @@ namespace Waffle
         private ToolStripMenuItem btnExit;
         private Button btnBookmark;
         private Button btnBookmarks;
+        private ToolStripMenuItem btnView;
+        private ToolStripMenuItem btnViewHistory;
+        private ToolStripMenuItem btnAbout;
     }
 }

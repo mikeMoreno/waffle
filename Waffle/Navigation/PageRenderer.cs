@@ -8,9 +8,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Waffle.History;
 using Waffle.Lib;
 
-namespace Waffle.UserControls
+namespace Waffle.Navigation
 {
     partial class PageRenderer : UserControl
     {
@@ -18,27 +19,29 @@ namespace Waffle.UserControls
 
         private string CurrentlyDisplayedText { get; set; }
 
-        private List<SelectorLine> CurrentlyViewedSelectorLines { get; set; }
-
         private Image CurrentlyDisplayedPng { get; set; }
 
         private Image CurrentlyDisplayedImage { get; set; }
 
         public ItemType CurrentPageType { get; set; }
 
-        public WaffleLib WaffleLib { get; set; }
-
-        public Stack<SelectorLine> VisitedUrls { get; } = new Stack<SelectorLine>();
+        public Stack<SelectorLine> VisitedPages { get; } = new Stack<SelectorLine>();
 
         public string StandbyText { get; set; }
 
-        public delegate void LinkClickedEventHandler(object sender, LinkClickedEventArgs e);
+        public SelectorLine CurrentSelectorLine { get; set; }
+
+        public delegate void LinkClickedEventHandler(object sender, NavigationLinkClickedEventArgs e);
 
         public event LinkClickedEventHandler LinkClicked;
 
         public delegate void ViewSourceEventHandler(object sender, ViewSourceEventArgs e);
 
         public event ViewSourceEventHandler ViewingSource;
+
+        public delegate void ViewHistoryEventHandler(object sender, ViewHistoryEventArgs e);
+
+        public event ViewHistoryEventHandler ViewingHistory;
 
         public delegate void CloseTabEventHandler(object sender, EventArgs e);
 
@@ -208,7 +211,7 @@ namespace Waffle.UserControls
             btnViewSource.Enabled = false;
         }
 
-        public void ViewSource(TextResponse response)
+        public void RenderSource(TextResponse response)
         {
             Render(response);
 
@@ -265,55 +268,11 @@ namespace Waffle.UserControls
             var label = BuildLabel(x, y, selectorLine);
             label.ForeColor = Color.CornflowerBlue;
 
-            label.Click += async (object sender, EventArgs e) =>
+            label.Click += (object sender, EventArgs e) =>
             {
                 var selectorLine = (sender as Label).Tag as SelectorLine;
 
-                if (selectorLine.ItemType != ItemType.BinaryFile)
-                {
-                    LinkClicked?.Invoke(this, new LinkClickedEventArgs(selectorLine));
-                }
-
-                var response = await WaffleLib.GetAsync(selectorLine);
-
-                if (!response.IsSuccess)
-                {
-                    MessageBox.Show(response.ErrorMessage);
-
-                    return;
-                }
-
-                switch (response)
-                {
-                    case MenuResponse menuResponse:
-                        Render(menuResponse);
-                        break;
-                    case TextResponse textResponse:
-                        Render(textResponse);
-                        break;
-                    case PngResponse pngResponse:
-                        Render(pngResponse);
-                        break;
-                    case ImageResponse imageResponse:
-                        Render(imageResponse);
-                        break;
-                    case BinaryResponse binaryResponse:
-                        var fileName = selectorLine.Selector[(selectorLine.Selector.LastIndexOf('/') + 1)..];
-
-                        var fsDialog = new SaveFileDialog
-                        {
-                            FileName = fileName
-                        };
-
-                        var ans = fsDialog.ShowDialog();
-
-                        if (ans == DialogResult.OK)
-                        {
-                            File.WriteAllBytes(fsDialog.FileName, binaryResponse.Bytes);
-                        }
-
-                        break;
-                }
+                LinkClicked?.Invoke(this, new NavigationLinkClickedEventArgs(selectorLine));
             };
 
             return label;
@@ -400,11 +359,15 @@ namespace Waffle.UserControls
             ViewingSource?.Invoke(this, new ViewSourceEventArgs(CurrentlyDisplayedText));
         }
 
-        public static PageRenderer Instance(WaffleLib waffleLib)
+        private void btnViewHistory_Click(object sender, EventArgs e)
+        {
+            ViewingHistory?.Invoke(this, new ViewHistoryEventArgs());
+        }
+
+        public static PageRenderer Instance()
         {
             var pageRenderer = new PageRenderer
             {
-                WaffleLib = waffleLib,
                 AutoScroll = true,
                 Dock = DockStyle.Fill
             };
