@@ -149,7 +149,7 @@ namespace Waffle.UserControls
 
                 if (IsLink(line))
                 {
-                    label = BuildLinkLabel(x: 10, y, line);
+                    label = BuildLinkLabel(x: 10, y, new LinkLine(line));
                 }
                 else
                 {
@@ -243,66 +243,6 @@ namespace Waffle.UserControls
             return label;
         }
 
-        private Label BuildLinkLabel(int x, int y, string line)
-        {
-            var linkLine = new LinkLine(line);
-
-            var label = BuildLabel(x, y, line);
-            label.ForeColor = Color.CornflowerBlue;
-
-            label.Click += async (object sender, EventArgs e) =>
-            {
-                if (linkLine.ItemType != ItemType.BinaryFile)
-                {
-                    LinkClicked?.Invoke(this, new LinkClickedEventArgs(linkLine));
-                }
-
-                var response = await WaffleLib.GetAsync(linkLine);
-
-                if (!response.IsSuccess)
-                {
-                    MessageBox.Show(response.ErrorMessage);
-
-                    return;
-                }
-
-                switch (response)
-                {
-                    case MenuResponse menuResponse:
-                        Render(menuResponse);
-                        break;
-                    case TextResponse textResponse:
-                        Render(textResponse);
-                        break;
-                    case PngResponse pngResponse:
-                        Render(pngResponse);
-                        break;
-                    case ImageResponse imageResponse:
-                        Render(imageResponse);
-                        break;
-                    case BinaryResponse binaryResponse:
-
-                        // TODO: set up selector/path correctly in LinkLine and then merge this code with the other BuildLinkLabel method.
-                        var fileName = line[(line.LastIndexOf('/') + 1)..];
-
-                        var fsDialog = new SaveFileDialog
-                        {
-                            FileName = fileName
-                        };
-
-                        var ans = fsDialog.ShowDialog();
-
-                        if (ans == DialogResult.OK)
-                        {
-                            File.WriteAllBytes(fsDialog.FileName, binaryResponse.Bytes);
-                        }
-                        break;
-                }
-            };
-
-            return label;
-        }
-
         private Label BuildLabel(int x, int y, SelectorLine selectorLine)
         {
             var label = new Label()
@@ -371,6 +311,7 @@ namespace Waffle.UserControls
                         {
                             File.WriteAllBytes(fsDialog.FileName, binaryResponse.Bytes);
                         }
+
                         break;
                 }
             };

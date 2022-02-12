@@ -99,38 +99,6 @@ namespace Waffle.Lib
             return line;
         }
 
-        protected static ItemType GetItemType(string absoluteUrl)
-        {
-            var parsedUrl = UrlValidator.ParseUrl(absoluteUrl);
-
-            var itemType = ParseItemType(parsedUrl);
-
-            if (itemType == "0")
-            {
-                return ItemType.Text;
-            }
-            else if (itemType == "1")
-            {
-                return ItemType.Menu;
-            }
-            else if (itemType == "p")
-            {
-                return ItemType.PNG;
-            }
-            else if (itemType == "I")
-            {
-                return ItemType.Image;
-            }
-            else if (itemType == "9")
-            {
-                return ItemType.BinaryFile;
-            }
-            else
-            {
-                return GetItemTypeFromFileExtension(absoluteUrl);
-            }
-        }
-
         private static ItemType GetItemTypeFromFileExtension(string absoluteUrl)
         {
             if (absoluteUrl.EndsWith(".jpg"))
@@ -191,6 +159,38 @@ namespace Waffle.Lib
             }
 
             return path;
+        }
+
+        protected static ItemType GetItemType(string absoluteUrl)
+        {
+            var parsedUrl = UrlValidator.ParseUrl(absoluteUrl);
+
+            var itemType = ParseItemType(parsedUrl);
+
+            if (itemType == "0")
+            {
+                return ItemType.Text;
+            }
+            else if (itemType == "1")
+            {
+                return ItemType.Menu;
+            }
+            else if (itemType == "p")
+            {
+                return ItemType.PNG;
+            }
+            else if (itemType == "I")
+            {
+                return ItemType.Image;
+            }
+            else if (itemType == "9")
+            {
+                return ItemType.BinaryFile;
+            }
+            else
+            {
+                return GetItemTypeFromFileExtension(absoluteUrl);
+            }
         }
     }
 }

@@ -366,10 +366,7 @@ namespace Waffle
                 return;
             }
 
-            using var favAdder = new BookmarkAdder(new LinkLine(txtUrl.Text)
-            {
-
-            });
+            using var favAdder = new BookmarkAdder(new LinkLine(txtUrl.Text));
 
             var ans = favAdder.ShowDialog();
         }
