@@ -5,13 +5,13 @@ using Waffle.UserControls;
 
 namespace Waffle
 {
-    partial class Main : Form
+    partial class Navigator : Form
     {
         private WaffleLib WaffleLib { get; }
 
         private HistoryService HistoryService { get; }
 
-        public Main(WaffleLib waffleLib, HistoryService historyService)
+        public Navigator(WaffleLib waffleLib, HistoryService historyService)
         {
             InitializeComponent();
 

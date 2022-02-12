@@ -2,7 +2,7 @@
 
 namespace Waffle
 {
-    partial class Main
+    partial class Navigator
     {
         /// <summary>
         ///  Required designer variable.
@@ -30,7 +30,7 @@ namespace Waffle
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Navigator));
             this.txtUrl = new System.Windows.Forms.TextBox();
             this.btnGo = new System.Windows.Forms.Button();
             this.btnBack = new System.Windows.Forms.Button();
