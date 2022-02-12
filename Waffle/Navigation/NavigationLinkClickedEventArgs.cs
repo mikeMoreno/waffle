@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Waffle.Lib;
 
-namespace Waffle
+namespace Waffle.Navigation
 {
-    class LinkClickedEventArgs : EventArgs
+    class NavigationLinkClickedEventArgs : EventArgs
     {
         public SelectorLine SelectorLine { get; }
 
-        public LinkClickedEventArgs(SelectorLine selectorLine)
+        public NavigationLinkClickedEventArgs(SelectorLine selectorLine)
         {
             SelectorLine = selectorLine;
         }

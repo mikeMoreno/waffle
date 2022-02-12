@@ -108,7 +108,7 @@ namespace Waffle.Navigation
             return tabPage;
         }
 
-        private async void PageRenderer_LinkClicked(object sender, LinkClickedEventArgs e)
+        private async void PageRenderer_LinkClicked(object sender, NavigationLinkClickedEventArgs e)
         {
             await VisitSiteAsync(e.SelectorLine);
         }
@@ -462,7 +462,7 @@ namespace Waffle.Navigation
             await VisitSiteAsync(e.Bookmark.Url, newTab: true);
         }
 
-        private async void HistoryForm_LinkClicked(object sender, LinkClickedEventArgs e)
+        private async void HistoryForm_LinkClicked(object sender, NavigationLinkClickedEventArgs e)
         {
             // TODO: by default, newTab: false. have separate button for opening in a new tab, like with bookmarks.
             await VisitSiteAsync(e.SelectorLine, newTab: true);

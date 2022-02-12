@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Waffle.Lib;
 
-namespace Waffle
+namespace Waffle.Navigation
 {
     public class ViewSourceEventArgs : EventArgs
     {

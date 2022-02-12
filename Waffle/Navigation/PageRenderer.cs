@@ -31,7 +31,7 @@ namespace Waffle.Navigation
 
         public SelectorLine CurrentSelectorLine { get; set; }
 
-        public delegate void LinkClickedEventHandler(object sender, LinkClickedEventArgs e);
+        public delegate void LinkClickedEventHandler(object sender, NavigationLinkClickedEventArgs e);
 
         public event LinkClickedEventHandler LinkClicked;
 
@@ -272,7 +272,7 @@ namespace Waffle.Navigation
             {
                 var selectorLine = (sender as Label).Tag as SelectorLine;
 
-                LinkClicked?.Invoke(this, new LinkClickedEventArgs(selectorLine));
+                LinkClicked?.Invoke(this, new NavigationLinkClickedEventArgs(selectorLine));
             };
 
             return label;

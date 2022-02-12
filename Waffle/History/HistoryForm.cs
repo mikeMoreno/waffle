@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Waffle.Lib;
+using Waffle.Navigation;
 
 namespace Waffle.History
 {
@@ -17,7 +18,7 @@ namespace Waffle.History
 
         Guid? SelectedTabKey { get; }
 
-        public delegate void LinkClickedEventHandler(object sender, LinkClickedEventArgs e);
+        public delegate void LinkClickedEventHandler(object sender, NavigationLinkClickedEventArgs e);
 
         public event LinkClickedEventHandler LinkClicked;
 
@@ -49,7 +50,7 @@ namespace Waffle.History
 
             var historyEntity = selectedItem as HistoryEntity;
 
-            LinkClicked?.Invoke(this, new LinkClickedEventArgs(historyEntity.SelectorLine));
+            LinkClicked?.Invoke(this, new NavigationLinkClickedEventArgs(historyEntity.SelectorLine));
         }
     }
 }
