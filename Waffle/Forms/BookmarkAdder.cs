@@ -16,11 +16,19 @@ namespace Waffle.Forms
 
             this.absoluteUrl = absoluteUrl;
 
-            txtName.Text = absoluteUrl;
+            txtName.Text = GetUserFriendlyName(absoluteUrl);
 
             BookmarkEntities = LoadBookmarks();
 
             PopulateBookmarkTree(BookmarkEntities);
+        }
+
+        private static string GetUserFriendlyName(string absoluteUrl)
+        {
+            absoluteUrl = absoluteUrl.Replace("gopher://", "");
+            absoluteUrl = absoluteUrl.TrimEnd('/');
+
+            return absoluteUrl;
         }
 
         private void PopulateBookmarkTree(List<BookmarkEntity> bookmarkEntities)
@@ -45,7 +53,7 @@ namespace Waffle.Forms
                     Tag = bookmark,
                 };
 
-                if(parent != null)
+                if (parent != null)
                 {
                     parent.Nodes.Add(bookmarkNode);
                 }
@@ -63,7 +71,7 @@ namespace Waffle.Forms
                 Tag = folder,
             };
 
-            if(parent != null)
+            if (parent != null)
             {
                 parent.Nodes.Add(folderNode);
             }
