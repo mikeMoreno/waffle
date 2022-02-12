@@ -11,7 +11,7 @@ using System.Windows.Forms;
 using Waffle.History;
 using Waffle.Lib;
 
-namespace Waffle.UserControls
+namespace Waffle.Navigation
 {
     partial class PageRenderer : UserControl
     {

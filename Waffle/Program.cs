@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Waffle.History;
 using Waffle.Lib;
+using Waffle.Navigation;
 
 namespace Waffle
 {

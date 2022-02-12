@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace Waffle.UserControls
+namespace Waffle.Navigation
 {
     partial class PageRenderer
     {

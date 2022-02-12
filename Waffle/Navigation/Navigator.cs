@@ -1,9 +1,8 @@
 using Waffle.Bookmarks;
 using Waffle.History;
 using Waffle.Lib;
-using Waffle.UserControls;
 
-namespace Waffle
+namespace Waffle.Navigation
 {
     partial class Navigator : Form
     {
