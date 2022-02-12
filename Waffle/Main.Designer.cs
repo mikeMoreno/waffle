@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace Waffle.Forms
+namespace Waffle
 {
     partial class Main
     {

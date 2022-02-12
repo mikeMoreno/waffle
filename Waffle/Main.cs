@@ -2,7 +2,7 @@ using Waffle.History;
 using Waffle.Lib;
 using Waffle.UserControls;
 
-namespace Waffle.Forms
+namespace Waffle
 {
     partial class Main : Form
     {
