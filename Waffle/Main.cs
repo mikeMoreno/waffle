@@ -66,7 +66,7 @@ namespace Waffle
             }
             else
             {
-                if (pageRenderer.VisitedUrls.TryPeek(out SelectorLine line))
+                if (pageRenderer.VisitedPages.TryPeek(out SelectorLine line))
                 {
                     if (line.GetLink() != "<home>")
                     {
@@ -181,15 +181,15 @@ namespace Waffle
             selectedTab.Text = selectorLine.GetUserFriendlyName();
             Text = $"Waffle - {pageRenderer.CurrentPageType}";
 
-            if (!pageRenderer.VisitedUrls.Any())
+            if (!pageRenderer.VisitedPages.Any())
             {
-                pageRenderer.VisitedUrls.Push(new LinkLine("<home>"));
+                pageRenderer.VisitedPages.Push(new LinkLine("<home>"));
             }
             else
             {
                 if (currentLink != null)
                 {
-                    pageRenderer.VisitedUrls.Push(currentLink);
+                    pageRenderer.VisitedPages.Push(currentLink);
                 }
             }
 
@@ -255,7 +255,7 @@ namespace Waffle
             var selectedTab = tabSitePages.SelectedTab;
             var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().Single();
 
-            var selectorLine = pageRenderer.VisitedUrls.Pop();
+            var selectorLine = pageRenderer.VisitedPages.Pop();
 
             var lastVisitedUrl = selectorLine.GetLink();
 
@@ -273,7 +273,7 @@ namespace Waffle
                 Text = $"Waffle - {selectorLine.ItemType}";
             }
 
-            if (!pageRenderer.VisitedUrls.Any())
+            if (!pageRenderer.VisitedPages.Any())
             {
                 btnBack.Enabled = false;
             }
@@ -378,7 +378,7 @@ namespace Waffle
 
             var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().SingleOrDefault();
 
-            if (pageRenderer != null && pageRenderer.VisitedUrls.Any())
+            if (pageRenderer != null && pageRenderer.VisitedPages.Any())
             {
                 btnBack.Enabled = true;
             }
@@ -447,7 +447,7 @@ namespace Waffle
 
         private async void HistoryForm_LinkClicked(object sender, LinkClickedEventArgs e)
         {
-            await VisitSiteAsync(e.SelectorLine.GetLink());
+            await VisitSiteAsync(e.SelectorLine);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Waffle.UserControls
 
         public WaffleLib WaffleLib { get; set; }
 
-        public Stack<SelectorLine> VisitedUrls { get; } = new Stack<SelectorLine>();
+        public Stack<SelectorLine> VisitedPages { get; } = new Stack<SelectorLine>();
 
         public string StandbyText { get; set; }
 
