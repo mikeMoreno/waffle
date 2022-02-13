@@ -70,8 +70,8 @@ namespace Waffle.Navigation
             else
             {
                 var selectorLine = pageRenderer.CurrentSelectorLine;
-                
-                if(selectorLine != null)
+
+                if (selectorLine != null)
                 {
                     txtUrl.Text = selectorLine.GetLink();
                 }
@@ -188,6 +188,11 @@ namespace Waffle.Navigation
             var successfullyRendered = await RenderUrlAsync(selectorLine);
 
             if (!successfullyRendered)
+            {
+                return;
+            }
+
+            if (!selectorLine.IsRenderable)
             {
                 return;
             }
