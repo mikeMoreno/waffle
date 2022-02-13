@@ -436,19 +436,26 @@ namespace Waffle.Navigation
 
         private void btnAddBookmark_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtUrl.Text))
+            if (tabSitePages.SelectedTab is not RequestTab selectedTab)
             {
                 return;
             }
 
-            using var favAdder = new BookmarkAdder(new LinkLine(txtUrl.Text));
+            var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().Single();
+
+            if(pageRenderer == null || pageRenderer.CurrentSelectorLine == null)
+            {
+                return;
+            }
+
+            using var favAdder = new BookmarkAdder(pageRenderer.CurrentSelectorLine);
 
             var ans = favAdder.ShowDialog();
         }
 
         private void btnOpenBookmarkPanel_Click(object sender, EventArgs e)
         {
-            var bookmarkPanel = new BookmarkPanel()
+            var bookmarkPanel = new BookmarkPanel(WaffleLib)
             {
                 Dock = DockStyle.Right,
                 Size = new Size()
@@ -466,12 +473,12 @@ namespace Waffle.Navigation
 
         private async void BookmarkPanel_LinkClicked(object sender, BookmarkClickedEventArgs e)
         {
-            await VisitSiteAsync(e.Bookmark.Url);
+            await VisitSiteAsync(e.SelectorLine);
         }
 
         private async void BookmarkPanel_OpenInNewTabClicked(object sender, BookmarkClickedEventArgs e)
         {
-            await VisitSiteAsync(e.Bookmark.Url, newTab: true);
+            await VisitSiteAsync(e.SelectorLine, newTab: true);
         }
 
         private async void HistoryForm_LinkClicked(object sender, NavigationLinkClickedEventArgs e)
