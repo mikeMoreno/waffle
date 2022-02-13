@@ -17,8 +17,6 @@ namespace Waffle.Navigation
             WaffleLib = waffleLib;
             HistoryService = historyService;
 
-            HistoryService.Consolidate();
-
             SpawnNewTab();
 
             tabSitePages.SelectedIndexChanged += TabSitePages_SelectedIndexChanged;
