@@ -434,7 +434,7 @@ namespace Waffle.Navigation
             aboutForm.Show();
         }
 
-        private void btnFavorite_Click(object sender, EventArgs e)
+        private void btnAddBookmark_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtUrl.Text))
             {
@@ -446,7 +446,7 @@ namespace Waffle.Navigation
             var ans = favAdder.ShowDialog();
         }
 
-        private void btnBookmarks_Click(object sender, EventArgs e)
+        private void btnOpenBookmarkPanel_Click(object sender, EventArgs e)
         {
             var bookmarkPanel = new BookmarkPanel()
             {
