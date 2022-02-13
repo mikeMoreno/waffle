@@ -28,7 +28,7 @@ namespace Waffle.Bookmarks
 
             if (bookmarkEntity is Bookmark bookmark)
             {
-                txtUrl.Text = bookmark.Url;
+                txtUrl.Text = bookmark.SelectorLine.GetLink();
             }
             else
             {

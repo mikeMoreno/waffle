@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Waffle.Lib;
 
 namespace Waffle.Bookmarks
 {
@@ -10,6 +11,6 @@ namespace Waffle.Bookmarks
     {
         public override string BookmarkEntityType => "Bookmark";
 
-        public string Url { get; set; }
+        public SelectorLine SelectorLine { get; set; }
     }
 }

@@ -9,11 +9,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Waffle.Bookmarks;
+using Waffle.Lib;
 
 namespace Waffle.Bookmarks
 {
     partial class BookmarkPanel : UserControl
     {
+        private WaffleLib WaffleLib { get; }
+
         private List<BookmarkEntity> BookmarkEntities { get; }
 
         public delegate void BookmarkClickedEventHandler(object sender, BookmarkClickedEventArgs e);
@@ -24,7 +27,7 @@ namespace Waffle.Bookmarks
 
         public event OpenInNewTabEventHandler OpenInNewTabClicked;
 
-        public BookmarkPanel()
+        public BookmarkPanel(WaffleLib waffleLib)
         {
             InitializeComponent();
 
@@ -32,6 +35,8 @@ namespace Waffle.Bookmarks
             {
                 return;
             }
+
+            WaffleLib = waffleLib;
 
             BookmarkEntities = LoadBookmarks();
 
@@ -180,7 +185,7 @@ namespace Waffle.Bookmarks
 
                     if (bookmarkEntity is Bookmark bookmark)
                     {
-                        bookmark.Url = bookmarkEditor.BookmarkUrl;
+                        bookmark.SelectorLine.Raw = bookmarkEditor.BookmarkUrl;
                     }
                 }
             }
@@ -202,16 +207,17 @@ namespace Waffle.Bookmarks
             {
                 if (bookmarkTree.SelectedNode.Tag is Bookmark bookmark)
                 {
-                    LinkClicked?.Invoke(this, new BookmarkClickedEventArgs(bookmark));
+                    LinkClicked?.Invoke(this, new BookmarkClickedEventArgs(bookmark.SelectorLine));
                 }
             }
         }
 
         private void btnAddBookmark_Click(object sender, EventArgs e)
         {
-            // TODO: persist entire selectorLine
-
-            var newBookmark = new Bookmark();
+            var newBookmark = new Bookmark()
+            {
+                SelectorLine = new SelectorLine()
+            };
 
             using (var bookmarkEditor = new BookmarkEditor(newBookmark))
             {
@@ -225,7 +231,9 @@ namespace Waffle.Bookmarks
                 }
 
                 newBookmark.Name = bookmarkEditor.BookmarkName;
-                newBookmark.Url = bookmarkEditor.BookmarkUrl;
+                newBookmark.SelectorLine.Raw = bookmarkEditor.BookmarkUrl;
+
+                newBookmark.SelectorLine.ItemType = DetermineItemType(newBookmark.SelectorLine.Raw);
 
                 var selectedNode = bookmarkTree.SelectedNode;
 
@@ -259,6 +267,18 @@ namespace Waffle.Bookmarks
 
             PopulateBookmarkTree(BookmarkEntities);
             SaveBookmarks(BookmarkEntities);
+        }
+
+        private ItemType DetermineItemType(string absoluteUrl)
+        {
+            var linkLine = new LinkLine(absoluteUrl);
+
+            if (linkLine.ItemType == ItemType.Unknown)
+            {
+                linkLine.ItemType = ItemType.Menu;
+            }
+
+            return linkLine.ItemType;
         }
 
         private void btnAddFolder_Click(object sender, EventArgs e)
@@ -325,7 +345,7 @@ namespace Waffle.Bookmarks
             {
                 if (bookmarkTree.SelectedNode.Tag is Bookmark bookmark)
                 {
-                    OpenInNewTabClicked?.Invoke(this, new BookmarkClickedEventArgs(bookmark));
+                    OpenInNewTabClicked?.Invoke(this, new BookmarkClickedEventArgs(bookmark.SelectorLine));
                 }
             }
         }

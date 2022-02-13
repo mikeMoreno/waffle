@@ -41,9 +41,9 @@ namespace Waffle.Navigation
             this.btnExit = new System.Windows.Forms.ToolStripMenuItem();
             this.btnView = new System.Windows.Forms.ToolStripMenuItem();
             this.btnViewHistory = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnBookmark = new System.Windows.Forms.Button();
-            this.btnBookmarks = new System.Windows.Forms.Button();
             this.btnAbout = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnAddBookmark = new System.Windows.Forms.Button();
+            this.btnOpenBookmarkPanel = new System.Windows.Forms.Button();
             this.tabSitePages.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -140,31 +140,9 @@ namespace Waffle.Navigation
             // btnViewHistory
             // 
             this.btnViewHistory.Name = "btnViewHistory";
-            this.btnViewHistory.Size = new System.Drawing.Size(180, 22);
+            this.btnViewHistory.Size = new System.Drawing.Size(112, 22);
             this.btnViewHistory.Text = "History";
             this.btnViewHistory.Click += new System.EventHandler(this.btnViewHistory_Click);
-            // 
-            // btnBookmark
-            // 
-            this.btnBookmark.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBookmark.Image = global::Waffle.Properties.Resources.heart_add;
-            this.btnBookmark.Location = new System.Drawing.Point(743, 41);
-            this.btnBookmark.Name = "btnBookmark";
-            this.btnBookmark.Size = new System.Drawing.Size(30, 25);
-            this.btnBookmark.TabIndex = 7;
-            this.btnBookmark.UseVisualStyleBackColor = true;
-            this.btnBookmark.Click += new System.EventHandler(this.btnFavorite_Click);
-            // 
-            // btnBookmarks
-            // 
-            this.btnBookmarks.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBookmarks.Image = global::Waffle.Properties.Resources.favorites;
-            this.btnBookmarks.Location = new System.Drawing.Point(779, 42);
-            this.btnBookmarks.Name = "btnBookmarks";
-            this.btnBookmarks.Size = new System.Drawing.Size(30, 25);
-            this.btnBookmarks.TabIndex = 8;
-            this.btnBookmarks.UseVisualStyleBackColor = true;
-            this.btnBookmarks.Click += new System.EventHandler(this.btnBookmarks_Click);
             // 
             // btnAbout
             // 
@@ -173,13 +151,35 @@ namespace Waffle.Navigation
             this.btnAbout.Text = "About";
             this.btnAbout.Click += new System.EventHandler(this.btnAbout_Click);
             // 
-            // Main
+            // btnAddBookmark
+            // 
+            this.btnAddBookmark.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAddBookmark.Image = global::Waffle.Properties.Resources.heart_add;
+            this.btnAddBookmark.Location = new System.Drawing.Point(743, 41);
+            this.btnAddBookmark.Name = "btnAddBookmark";
+            this.btnAddBookmark.Size = new System.Drawing.Size(30, 25);
+            this.btnAddBookmark.TabIndex = 7;
+            this.btnAddBookmark.UseVisualStyleBackColor = true;
+            this.btnAddBookmark.Click += new System.EventHandler(this.btnAddBookmark_Click);
+            // 
+            // btnOpenBookmarkPanel
+            // 
+            this.btnOpenBookmarkPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOpenBookmarkPanel.Image = global::Waffle.Properties.Resources.favorites;
+            this.btnOpenBookmarkPanel.Location = new System.Drawing.Point(779, 42);
+            this.btnOpenBookmarkPanel.Name = "btnOpenBookmarkPanel";
+            this.btnOpenBookmarkPanel.Size = new System.Drawing.Size(30, 25);
+            this.btnOpenBookmarkPanel.TabIndex = 8;
+            this.btnOpenBookmarkPanel.UseVisualStyleBackColor = true;
+            this.btnOpenBookmarkPanel.Click += new System.EventHandler(this.btnOpenBookmarkPanel_Click);
+            // 
+            // Navigator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(825, 521);
-            this.Controls.Add(this.btnBookmarks);
-            this.Controls.Add(this.btnBookmark);
+            this.Controls.Add(this.btnOpenBookmarkPanel);
+            this.Controls.Add(this.btnAddBookmark);
             this.Controls.Add(this.tabSitePages);
             this.Controls.Add(this.btnBack);
             this.Controls.Add(this.btnGo);
@@ -188,7 +188,7 @@ namespace Waffle.Navigation
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Main";
+            this.Name = "Navigator";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Waffle";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Main_KeyDown);
@@ -209,8 +209,8 @@ namespace Waffle.Navigation
         private MenuStrip menuStrip1;
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem btnExit;
-        private Button btnBookmark;
-        private Button btnBookmarks;
+        private Button btnAddBookmark;
+        private Button btnOpenBookmarkPanel;
         private ToolStripMenuItem btnView;
         private ToolStripMenuItem btnViewHistory;
         private ToolStripMenuItem btnAbout;
