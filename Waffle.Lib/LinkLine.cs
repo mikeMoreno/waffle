@@ -14,10 +14,5 @@ namespace Waffle.Lib
             DisplayString = Raw;
             ItemType = GetItemType(Raw);
         }
-
-        public override string GetLink()
-        {
-            return Raw;
-        }
     }
 }
