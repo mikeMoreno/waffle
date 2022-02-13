@@ -23,6 +23,18 @@ namespace Waffle.Lib
 
         public int Port { get; set; }
 
+        public bool IsRenderable
+        {
+            get
+            {
+                return ItemType == ItemType.Text ||
+                       ItemType == ItemType.Menu ||
+                       ItemType == ItemType.PNG ||
+                       ItemType == ItemType.Image ||
+                       ItemType == ItemType.Unknown;
+            }
+        }
+
         public SelectorLine()
         {
 
