@@ -9,6 +9,8 @@ namespace Waffle.History
 {
     internal class HistoryEntity
     {
+        public Guid Key { get; set; }
+
         public DateTime Timestamp { get; set; }
 
         public SelectorLine SelectorLine { get; set; }

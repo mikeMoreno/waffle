@@ -12,38 +12,21 @@ namespace Waffle.History
     {
         public void AddUrl(Guid tabKey, SelectorLine selectorLine)
         {
-            var history = LoadHistory(tabKey);
+            var allHistory = LoadHistory();
+            var tabHistory = LoadHistory(tabKey);
 
-            history.Add(new HistoryEntity()
+            var historyEntity = new HistoryEntity()
             {
+                Key = Guid.NewGuid(),
                 Timestamp = DateTime.Now,
                 SelectorLine = selectorLine,
-            });
+            };
 
-            SaveHistory(history, tabKey);
-        }
+            allHistory.Add(historyEntity);
+            tabHistory.Add(historyEntity);
 
-        public void Consolidate()
-        {
-            var allEntities = LoadHistory();
-
-            var historyFiles = Directory.GetFiles(Globals.HistoryFolder);
-
-            foreach (var historyfile in historyFiles)
-            {
-                if (Path.GetFileName(historyfile) == "all_history.json")
-                {
-                    continue;
-                }
-
-                var historyEntities = LoadHistory(historyfile);
-
-                allEntities.AddRange(historyEntities);
-
-                File.Delete(historyfile);
-            }
-
-            SaveHistory(allEntities);
+            SaveHistory(tabHistory, tabKey);
+            SaveHistory(allHistory);
         }
 
         public List<HistoryEntity> LoadHistory(Guid? tabKey = null)
@@ -64,7 +47,7 @@ namespace Waffle.History
 
             var historyEntities = JsonConvert.DeserializeObject<List<HistoryEntity>>(File.ReadAllText(fileName));
 
-            if(historyEntities == null)
+            if (historyEntities == null)
             {
                 return new List<HistoryEntity>();
             }
