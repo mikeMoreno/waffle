@@ -4,6 +4,8 @@ using Waffle.Lib;
 
 namespace Waffle.Navigation
 {
+    // TODO: open link in new tab button
+
     partial class Navigator : Form
     {
         private WaffleLib WaffleLib { get; }
