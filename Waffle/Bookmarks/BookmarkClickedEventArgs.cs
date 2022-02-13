@@ -10,8 +10,6 @@ namespace Waffle.Bookmarks
 
     class BookmarkClickedEventArgs : EventArgs
     {
-        //public Bookmark Bookmark { get; private set; }
-        
         public SelectorLine SelectorLine { get; }
 
 
