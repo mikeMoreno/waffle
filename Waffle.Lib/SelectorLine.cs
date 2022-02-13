@@ -55,7 +55,7 @@ namespace Waffle.Lib
 
             var parts = line.Split('\t');
 
-            if (parts.Length == 4)
+            if (parts.Length >= 4)
             {
                 ItemType = MapItemType(parts[0][0].ToString());
                 DisplayString = parts[0][1..];
