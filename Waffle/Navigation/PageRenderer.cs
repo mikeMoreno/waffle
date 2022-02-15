@@ -235,7 +235,7 @@ namespace Waffle.Navigation
 
             line = line.Trim();
 
-            return line.StartsWith("gopher://") || line.StartsWith("http://");
+            return line.StartsWith("gopher://") || line.StartsWith("http://") || line.StartsWith("https://");
         }
 
         private Label BuildLabel(int x, int y, string text)
