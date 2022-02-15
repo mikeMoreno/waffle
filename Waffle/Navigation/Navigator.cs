@@ -347,7 +347,7 @@ namespace Waffle.Navigation
             CloseTab();
         }
 
-        private void Main_KeyDown(object sender, KeyEventArgs e)
+        private async void Main_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.W)
             {
@@ -357,6 +357,11 @@ namespace Waffle.Navigation
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.T)
             {
                 OpenTab();
+            }
+
+            if(e.KeyCode == Keys.Enter)
+            {
+                await VisitSiteAsync(txtUrl.Text);
             }
         }
 
