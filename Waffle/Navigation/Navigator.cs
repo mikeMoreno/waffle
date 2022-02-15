@@ -364,6 +364,11 @@ namespace Waffle.Navigation
             {
                 await VisitSiteAsync(txtUrl.Text);
             }
+
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.L)
+            {
+                txtUrl.Focus();
+            }
         }
 
         private void CloseTab()
