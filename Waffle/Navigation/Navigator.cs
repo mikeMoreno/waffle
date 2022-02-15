@@ -1,11 +1,10 @@
+using System.Diagnostics;
 using Waffle.Bookmarks;
 using Waffle.History;
 using Waffle.Lib;
 
 namespace Waffle.Navigation
 {
-    // TODO: open link in new tab button
-
     partial class Navigator : Form
     {
         private WaffleLib WaffleLib { get; }
@@ -52,6 +51,8 @@ namespace Waffle.Navigation
             btnBack.Enabled = pageRenderer.VisitedPages.Any();
 
             SetUrlTextBoxText(selectedTab);
+
+            Text = $"Waffle - {pageRenderer.CurrentPageType}";
         }
 
         private void SetUrlTextBoxText(TabPage tabPage)
@@ -80,8 +81,6 @@ namespace Waffle.Navigation
                     txtUrl.Text = "";
                 }
             }
-
-            Text = $"Waffle - {pageRenderer.CurrentPageType}";
         }
 
         private TabPage SpawnNewTab()
@@ -109,6 +108,7 @@ namespace Waffle.Navigation
             tabSitePages.SelectedTab = tabPage;
 
             btnBack.Enabled = false;
+            txtUrl.Text = "";
 
             return tabPage;
         }
@@ -116,6 +116,11 @@ namespace Waffle.Navigation
         private async void PageRenderer_LinkClicked(object sender, NavigationLinkClickedEventArgs e)
         {
             await VisitSiteAsync(e.SelectorLine);
+        }
+
+        private async void PageRenderer_OpenInNewTabClicked(object sender, NavigationLinkClickedEventArgs e)
+        {
+            await VisitSiteAsync(e.SelectorLine, newTab: true);
         }
 
         private void PageRenderer_ViewingSource(object sender, ViewSourceEventArgs e)
@@ -250,6 +255,15 @@ namespace Waffle.Navigation
                 case ImageResponse imageResponse:
                     pageRenderer.Render(imageResponse);
                     break;
+                case HtmlResponse htmlResponse:
+                    var process = new ProcessStartInfo
+                    {
+                        FileName = htmlResponse.Url,
+                        UseShellExecute = true
+                    };
+
+                    Process.Start(process);
+                    break;
                 case BinaryResponse binaryResponse:
                     var fileName = selectorLine.Selector[(selectorLine.Selector.LastIndexOf('/') + 1)..];
 
@@ -327,6 +341,7 @@ namespace Waffle.Navigation
             var pageRenderer = PageRenderer.Instance();
 
             pageRenderer.LinkClicked += PageRenderer_LinkClicked;
+            pageRenderer.OpenInNewTabClicked += PageRenderer_OpenInNewTabClicked;
             pageRenderer.ViewingSource += PageRenderer_ViewingSource;
             pageRenderer.ViewingHistory += PageRenderer_ViewingHistory;
             pageRenderer.CloseTab += PageRenderer_CloseTab;
@@ -347,7 +362,7 @@ namespace Waffle.Navigation
             CloseTab();
         }
 
-        private void Main_KeyDown(object sender, KeyEventArgs e)
+        private async void Main_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.W)
             {
@@ -357,6 +372,16 @@ namespace Waffle.Navigation
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.T)
             {
                 OpenTab();
+            }
+
+            if (e.KeyCode == Keys.Enter)
+            {
+                await VisitSiteAsync(txtUrl.Text);
+            }
+
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.L)
+            {
+                txtUrl.Focus();
             }
         }
 
@@ -402,9 +427,14 @@ namespace Waffle.Navigation
 
             var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().SingleOrDefault();
 
-            if (pageRenderer != null && pageRenderer.VisitedPages.Any())
+            if (pageRenderer != null)
             {
-                btnBack.Enabled = true;
+                Text = $"Waffle - {pageRenderer.CurrentPageType}";
+
+                if (pageRenderer.VisitedPages.Any())
+                {
+                    btnBack.Enabled = true;
+                }
             }
 
             tabSitePages.SelectedIndexChanged += TabSitePages_SelectedIndexChanged;
@@ -445,7 +475,7 @@ namespace Waffle.Navigation
 
             var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().Single();
 
-            if(pageRenderer == null || pageRenderer.CurrentSelectorLine == null)
+            if (pageRenderer == null || pageRenderer.CurrentSelectorLine == null)
             {
                 return;
             }

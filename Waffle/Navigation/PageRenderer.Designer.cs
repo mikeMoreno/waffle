@@ -34,10 +34,13 @@ namespace Waffle.Navigation
             this.pageRendererContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.btnSavePage = new System.Windows.Forms.ToolStripMenuItem();
             this.btnViewSource = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnViewHistory = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnCloseTab = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnViewHistory = new System.Windows.Forms.ToolStripMenuItem();
+            this.linkContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openLinkInNewTab = new System.Windows.Forms.ToolStripMenuItem();
             this.pageRendererContextMenu.SuspendLayout();
+            this.linkContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // pageRendererContextMenu
@@ -49,12 +52,12 @@ namespace Waffle.Navigation
             this.toolStripSeparator1,
             this.btnCloseTab});
             this.pageRendererContextMenu.Name = "pageRendererContextMenu";
-            this.pageRendererContextMenu.Size = new System.Drawing.Size(181, 120);
+            this.pageRendererContextMenu.Size = new System.Drawing.Size(141, 98);
             // 
             // btnSavePage
             // 
             this.btnSavePage.Name = "btnSavePage";
-            this.btnSavePage.Size = new System.Drawing.Size(180, 22);
+            this.btnSavePage.Size = new System.Drawing.Size(140, 22);
             this.btnSavePage.Text = "Save";
             this.btnSavePage.Click += new System.EventHandler(this.btnSavePage_Click);
             // 
@@ -62,28 +65,42 @@ namespace Waffle.Navigation
             // 
             this.btnViewSource.Enabled = false;
             this.btnViewSource.Name = "btnViewSource";
-            this.btnViewSource.Size = new System.Drawing.Size(180, 22);
+            this.btnViewSource.Size = new System.Drawing.Size(140, 22);
             this.btnViewSource.Text = "View Source";
             this.btnViewSource.Click += new System.EventHandler(this.btnViewSource_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
-            // 
-            // btnCloseTab
-            // 
-            this.btnCloseTab.Name = "btnCloseTab";
-            this.btnCloseTab.Size = new System.Drawing.Size(180, 22);
-            this.btnCloseTab.Text = "Close";
-            this.btnCloseTab.Click += new System.EventHandler(this.btnCloseTab_Click);
             // 
             // btnViewHistory
             // 
             this.btnViewHistory.Name = "btnViewHistory";
-            this.btnViewHistory.Size = new System.Drawing.Size(180, 22);
+            this.btnViewHistory.Size = new System.Drawing.Size(140, 22);
             this.btnViewHistory.Text = "View History";
             this.btnViewHistory.Click += new System.EventHandler(this.btnViewHistory_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(137, 6);
+            // 
+            // btnCloseTab
+            // 
+            this.btnCloseTab.Name = "btnCloseTab";
+            this.btnCloseTab.Size = new System.Drawing.Size(140, 22);
+            this.btnCloseTab.Text = "Close";
+            this.btnCloseTab.Click += new System.EventHandler(this.btnCloseTab_Click);
+            // 
+            // linkContextMenu
+            // 
+            this.linkContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openLinkInNewTab});
+            this.linkContextMenu.Name = "linkContextMenu";
+            this.linkContextMenu.Size = new System.Drawing.Size(190, 48);
+            // 
+            // openLinkInNewTab
+            // 
+            this.openLinkInNewTab.Name = "openLinkInNewTab";
+            this.openLinkInNewTab.Size = new System.Drawing.Size(189, 22);
+            this.openLinkInNewTab.Text = "Open Link in New Tab";
+            this.openLinkInNewTab.Click += new System.EventHandler(this.openLinkInNewTab_Click);
             // 
             // PageRenderer
             // 
@@ -94,6 +111,7 @@ namespace Waffle.Navigation
             this.Name = "PageRenderer";
             this.Size = new System.Drawing.Size(686, 451);
             this.pageRendererContextMenu.ResumeLayout(false);
+            this.linkContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -106,5 +124,7 @@ namespace Waffle.Navigation
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem btnCloseTab;
         private ToolStripMenuItem btnViewHistory;
+        private ContextMenuStrip linkContextMenu;
+        private ToolStripMenuItem openLinkInNewTab;
     }
 }

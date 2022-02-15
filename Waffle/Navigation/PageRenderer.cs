@@ -35,6 +35,10 @@ namespace Waffle.Navigation
 
         public event LinkClickedEventHandler LinkClicked;
 
+        public delegate void OpenInNewTabEventHandler(object sender, NavigationLinkClickedEventArgs e);
+
+        public event OpenInNewTabEventHandler OpenInNewTabClicked;
+
         public delegate void ViewSourceEventHandler(object sender, ViewSourceEventArgs e);
 
         public event ViewSourceEventHandler ViewingSource;
@@ -116,6 +120,10 @@ namespace Waffle.Navigation
                     label = BuildLinkLabel(x: 10, y, line);
                 }
                 else if (line.ItemType == ItemType.BinaryFile)
+                {
+                    label = BuildLinkLabel(x: 10, y, line);
+                }
+                else if (line.ItemType == ItemType.HTML)
                 {
                     label = BuildLinkLabel(x: 10, y, line);
                 }
@@ -227,7 +235,7 @@ namespace Waffle.Navigation
 
             line = line.Trim();
 
-            return line.StartsWith("gopher://");
+            return line.StartsWith("gopher://") || line.StartsWith("http://") || line.StartsWith("https://");
         }
 
         private Label BuildLabel(int x, int y, string text)
@@ -267,6 +275,7 @@ namespace Waffle.Navigation
         {
             var label = BuildLabel(x, y, selectorLine);
             label.ForeColor = Color.CornflowerBlue;
+            label.ContextMenuStrip = linkContextMenu;
 
             label.Click += (object sender, EventArgs e) =>
             {
@@ -378,6 +387,17 @@ namespace Waffle.Navigation
         private void btnCloseTab_Click(object sender, EventArgs e)
         {
             CloseTab?.Invoke(this, new EventArgs());
+        }
+
+        private void openLinkInNewTab_Click(object sender, EventArgs e)
+        {
+            var owner = (sender as ToolStripMenuItem).Owner as ContextMenuStrip;
+
+            var label = owner.SourceControl as Label;
+
+            var selectorLine = label.Tag as SelectorLine;
+
+            OpenInNewTabClicked?.Invoke(this, new NavigationLinkClickedEventArgs(selectorLine));
         }
     }
 }
