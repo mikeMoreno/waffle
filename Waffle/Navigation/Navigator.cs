@@ -52,6 +52,8 @@ namespace Waffle.Navigation
             btnBack.Enabled = pageRenderer.VisitedPages.Any();
 
             SetUrlTextBoxText(selectedTab);
+
+            Text = $"Waffle - {pageRenderer.CurrentPageType}";
         }
 
         private void SetUrlTextBoxText(TabPage tabPage)
@@ -80,8 +82,6 @@ namespace Waffle.Navigation
                     txtUrl.Text = "";
                 }
             }
-
-            Text = $"Waffle - {pageRenderer.CurrentPageType}";
         }
 
         private TabPage SpawnNewTab()
@@ -407,9 +407,14 @@ namespace Waffle.Navigation
 
             var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().SingleOrDefault();
 
-            if (pageRenderer != null && pageRenderer.VisitedPages.Any())
+            if (pageRenderer != null)
             {
-                btnBack.Enabled = true;
+                Text = $"Waffle - {pageRenderer.CurrentPageType}";
+
+                if (pageRenderer.VisitedPages.Any())
+                {
+                    btnBack.Enabled = true;
+                }
             }
 
             tabSitePages.SelectedIndexChanged += TabSitePages_SelectedIndexChanged;
