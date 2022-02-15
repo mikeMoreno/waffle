@@ -118,6 +118,11 @@ namespace Waffle.Navigation
             await VisitSiteAsync(e.SelectorLine);
         }
 
+        private async void PageRenderer_OpenInNewTabClicked(object sender, NavigationLinkClickedEventArgs e)
+        {
+            await VisitSiteAsync(e.SelectorLine, newTab: true);
+        }
+
         private void PageRenderer_ViewingSource(object sender, ViewSourceEventArgs e)
         {
             tabSitePages.SelectedIndexChanged -= TabSitePages_SelectedIndexChanged;
@@ -336,6 +341,7 @@ namespace Waffle.Navigation
             var pageRenderer = PageRenderer.Instance();
 
             pageRenderer.LinkClicked += PageRenderer_LinkClicked;
+            pageRenderer.OpenInNewTabClicked += PageRenderer_OpenInNewTabClicked;
             pageRenderer.ViewingSource += PageRenderer_ViewingSource;
             pageRenderer.ViewingHistory += PageRenderer_ViewingHistory;
             pageRenderer.CloseTab += PageRenderer_CloseTab;
@@ -368,7 +374,7 @@ namespace Waffle.Navigation
                 OpenTab();
             }
 
-            if(e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter)
             {
                 await VisitSiteAsync(txtUrl.Text);
             }
@@ -469,7 +475,7 @@ namespace Waffle.Navigation
 
             var pageRenderer = selectedTab.Controls.OfType<PageRenderer>().Single();
 
-            if(pageRenderer == null || pageRenderer.CurrentSelectorLine == null)
+            if (pageRenderer == null || pageRenderer.CurrentSelectorLine == null)
             {
                 return;
             }

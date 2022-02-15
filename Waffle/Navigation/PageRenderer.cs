@@ -35,6 +35,10 @@ namespace Waffle.Navigation
 
         public event LinkClickedEventHandler LinkClicked;
 
+        public delegate void OpenInNewTabEventHandler(object sender, NavigationLinkClickedEventArgs e);
+
+        public event OpenInNewTabEventHandler OpenInNewTabClicked;
+
         public delegate void ViewSourceEventHandler(object sender, ViewSourceEventArgs e);
 
         public event ViewSourceEventHandler ViewingSource;
@@ -271,6 +275,7 @@ namespace Waffle.Navigation
         {
             var label = BuildLabel(x, y, selectorLine);
             label.ForeColor = Color.CornflowerBlue;
+            label.ContextMenuStrip = linkContextMenu;
 
             label.Click += (object sender, EventArgs e) =>
             {
@@ -382,6 +387,19 @@ namespace Waffle.Navigation
         private void btnCloseTab_Click(object sender, EventArgs e)
         {
             CloseTab?.Invoke(this, new EventArgs());
+        }
+
+        private void openLinkInNewTab_Click(object sender, EventArgs e)
+        {
+            var typ = sender.GetType();
+
+            var owner = (sender as ToolStripMenuItem).Owner as ContextMenuStrip;
+
+            var label = owner.SourceControl as Label;
+
+            var selectorLine = label.Tag as SelectorLine;
+
+            OpenInNewTabClicked?.Invoke(this, new NavigationLinkClickedEventArgs(selectorLine));
         }
     }
 }
