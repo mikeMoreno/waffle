@@ -391,8 +391,6 @@ namespace Waffle.Navigation
 
         private void openLinkInNewTab_Click(object sender, EventArgs e)
         {
-            var typ = sender.GetType();
-
             var owner = (sender as ToolStripMenuItem).Owner as ContextMenuStrip;
 
             var label = owner.SourceControl as Label;
