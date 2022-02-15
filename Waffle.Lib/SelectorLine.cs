@@ -76,12 +76,26 @@ namespace Waffle.Lib
 
         public virtual string GetLink()
         {
-            if(string.IsNullOrWhiteSpace(HostName) && string.IsNullOrWhiteSpace(Selector))
+            if (ItemType == ItemType.HTML)
             {
-                return Raw;
-            }
+                var url = Selector;
 
-            return $"gopher://{HostName}{Selector}";
+                if (url != null && url.StartsWith("URL:"))
+                {
+                    url = url[4..];
+                }
+
+                return url;
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(HostName) && string.IsNullOrWhiteSpace(Selector))
+                {
+                    return Raw;
+                }
+
+                return $"gopher://{HostName}{Selector}";
+            }
         }
 
         private static ItemType MapItemType(string itemTypePrefix)

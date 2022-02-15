@@ -1,11 +1,10 @@
+using System.Diagnostics;
 using Waffle.Bookmarks;
 using Waffle.History;
 using Waffle.Lib;
 
 namespace Waffle.Navigation
 {
-    // TODO: open link in new tab button
-
     partial class Navigator : Form
     {
         private WaffleLib WaffleLib { get; }
@@ -250,6 +249,15 @@ namespace Waffle.Navigation
                     break;
                 case ImageResponse imageResponse:
                     pageRenderer.Render(imageResponse);
+                    break;
+                case HtmlResponse htmlResponse:
+                    var process = new ProcessStartInfo
+                    {
+                        FileName = htmlResponse.Url,
+                        UseShellExecute = true
+                    };
+
+                    Process.Start(process);
                     break;
                 case BinaryResponse binaryResponse:
                     var fileName = selectorLine.Selector[(selectorLine.Selector.LastIndexOf('/') + 1)..];

@@ -119,6 +119,10 @@ namespace Waffle.Navigation
                 {
                     label = BuildLinkLabel(x: 10, y, line);
                 }
+                else if (line.ItemType == ItemType.HTML)
+                {
+                    label = BuildLinkLabel(x: 10, y, line);
+                }
                 else
                 {
                     label = BuildUnknownTypeLabel(x: 10, y, line);
@@ -227,7 +231,7 @@ namespace Waffle.Navigation
 
             line = line.Trim();
 
-            return line.StartsWith("gopher://");
+            return line.StartsWith("gopher://") || line.StartsWith("http://");
         }
 
         private Label BuildLabel(int x, int y, string text)

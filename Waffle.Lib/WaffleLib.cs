@@ -22,6 +22,7 @@ namespace Waffle.Lib
                 ItemType.PNG => await GetPngFileAsync(link),
                 ItemType.Image => await GetImageFileAsync(link),
                 ItemType.BinaryFile => await GetBinaryFile(link),
+                ItemType.HTML => GetHtmlLink(link),
                 _ => await GetMenuAsync(link),
             };
         }
@@ -149,6 +150,14 @@ namespace Waffle.Lib
             {
                 return Response.Error<BinaryResponse>(e);
             }
+        }
+
+        private HtmlResponse GetHtmlLink(string absoluteUrl)
+        {
+            return new HtmlResponse()
+            {
+                Url = absoluteUrl,
+            };
         }
     }
 }
