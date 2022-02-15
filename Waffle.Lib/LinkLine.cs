@@ -19,7 +19,7 @@ namespace Waffle.Lib
         {
             absoluteUrl = absoluteUrl.Trim();
 
-            if (absoluteUrl.StartsWith("http") || absoluteUrl.StartsWith("https"))
+            if (absoluteUrl.StartsWith("http://") || absoluteUrl.StartsWith("https://"))
             {
                 return ItemType.HTML;
             }
