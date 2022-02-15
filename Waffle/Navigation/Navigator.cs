@@ -109,6 +109,7 @@ namespace Waffle.Navigation
             tabSitePages.SelectedTab = tabPage;
 
             btnBack.Enabled = false;
+            txtUrl.Text = "";
 
             return tabPage;
         }
