@@ -16,6 +16,8 @@ namespace Waffle
         public AboutForm()
         {
             InitializeComponent();
+
+            Text = $"{Globals.ApplicationName} {Globals.ApplicationVersion}";
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

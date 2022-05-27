@@ -4,7 +4,7 @@
     {
         public static string ApplicationName => "Waffle";
 
-        public static string ApplicationVersion => "0.0.1";
+        public static string ApplicationVersion => "0.0.7";
 
         private static string applicationFolder;
         public static string ApplicationFolder
